@@ -34,13 +34,28 @@ function createCleanLogoSvgs() {
 
   fs.writeFileSync(path.join(OUT_DIR, 'logo-gotas-de-ouro.svg'), fullLogoSvg, 'utf8');
   fs.writeFileSync(path.join(OUT_DIR, 'logo-symbol.svg'), symbolSvg, 'utf8');
-  console.log('SVGs monocromaticos #1E1E1C criados com sucesso.');
+}
+
+async function createStaticNoiseTile() {
+  const tilePath = path.join(OUT_DIR, 'noise-tile.png');
+  if (fs.existsSync(tilePath)) return;
+  const size = 150;
+  const buf = Buffer.alloc(size * size * 4);
+  for (let i = 0; i < size * size; i++) {
+    const v = Math.floor(Math.random() * 255);
+    buf[i * 4] = v;
+    buf[i * 4 + 1] = v;
+    buf[i * 4 + 2] = v;
+    buf[i * 4 + 3] = 255;
+  }
+  await sharp(buf, { raw: { width: size, height: size, channels: 4 } })
+    .png({ compressionLevel: 9 })
+    .toFile(tilePath);
 }
 
 async function generateWithGenAI({ refFile, outName, prompt, width = 1280, height = 1600 }) {
   const outPath = path.join(OUT_DIR, outName);
   if (fs.existsSync(outPath)) {
-    console.log(`Ativo ja existente: ${outName}`);
     return true;
   }
 
@@ -78,7 +93,6 @@ async function generateWithGenAI({ refFile, outName, prompt, width = 1280, heigh
           .resize(width, height, { fit: 'cover', position: 'centre' })
           .jpeg({ quality: 92, chromaSubsampling: '4:4:4' })
           .toFile(outPath);
-        console.log(`Gerado com sucesso: ${outName}`);
         return true;
       }
     } catch (err) {
@@ -93,7 +107,6 @@ async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationS
   const outWebm = path.join(OUT_DIR, `${outputBaseName}.webm`);
   const outMp4 = path.join(OUT_DIR, `${outputBaseName}.mp4`);
   if (fs.existsSync(outWebm) && fs.existsSync(outMp4)) {
-    console.log(`Videos ja existentes: ${outputBaseName}.webm / .mp4`);
     return;
   }
 
@@ -180,34 +193,18 @@ async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationS
   });
 
   fs.copyFileSync(outWebm, outMp4);
-  console.log(`Video conceitual slow-motion gerado: ${outputBaseName}.webm & ${outputBaseName}.mp4`);
 }
 
 async function run() {
   createCleanLogoSvgs();
-
-  await generateWithGenAI({
-    refFile: 'logo.png',
-    outName: 'brand-deboss-box.jpg',
-    width: 1200,
-    height: 1500,
-    prompt: 'Luxury minimalist editorial product photography of a bespoke jewelry shipping box crafted from thick textured cotton paper in soft linen color (#F1F1EA) with blind deboss of the two-teardrop heart emblem and "Gotas de Ouro" calligraphy without BONSUCESSO.'
-  });
-
-  await generateWithGenAI({
-    refFile: 'logo.png',
-    outName: 'brand-limestone-plaque.jpg',
-    width: 1200,
-    height: 1500,
-    prompt: 'Architectural macro still-life photograph of a raw matte travertine limestone block (#D8D3C8) with the two-teardrop heart symbol and "Gotas de Ouro" engraved into the stone surface without BONSUCESSO.'
-  });
+  await createStaticNoiseTile();
 
   await generateWithGenAI({
     refFile: 'joia-1.jpeg',
     outName: 'joia-1-editorial.jpg',
     width: 1280,
     height: 1600,
-    prompt: 'Macro editorial jewelry photography of this exact gold round bezel necklace and matching round stud earrings with iridescent mother-of-pearl resting on a block of raw porous travertine marble (#D8D3C8).'
+    prompt: 'Macro editorial jewelry photography of this exact gold round bezel necklace and matching round stud earrings resting on a warm studio mineral surface (#D8D3C8).'
   });
 
   await generateWithGenAI({
@@ -215,7 +212,7 @@ async function run() {
     outName: 'joia-2-editorial.jpg',
     width: 1280,
     height: 1600,
-    prompt: 'Macro luxury editorial jewelry photography of this exact silver chain necklace with 3 sparkling Moissanite stones resting on handmade deckle-edge cotton paper (#F1F1EA).'
+    prompt: 'Macro luxury editorial jewelry photography of this exact silver chain necklace with 3 sparkling stones resting on soft linen paper (#F1F1EA).'
   });
 
   await generateWithGenAI({
@@ -223,7 +220,7 @@ async function run() {
     outName: 'joia-3-editorial.jpg',
     width: 1280,
     height: 1600,
-    prompt: 'High-fashion art gallery still-life photograph of this exact organic sculptural gold bezel necklace and matching stud earrings with matte white stone draped over a curved raw matte plaster sculpture (#F1F1EA).'
+    prompt: 'High-fashion art gallery still-life photograph of this exact organic sculptural gold bezel necklace and matching stud earrings with matte white stone draped over a curved matte plaster surface (#F1F1EA).'
   });
 
   await generateWithGenAI({
@@ -231,7 +228,7 @@ async function run() {
     outName: 'joia-4-editorial.jpg',
     width: 1280,
     height: 1600,
-    prompt: 'Macro luxury editorial jewelry photography of this exact brushed satin gold 5-petal flower necklace and matching floral stud earrings resting on softly draped raw rustic linen fabric (#F3F2D9).'
+    prompt: 'Macro luxury editorial jewelry photography of this exact brushed satin gold 5-petal flower necklace and matching floral stud earrings resting on softly draped raw linen fabric (#F3F2D9).'
   });
 
   await generateSlowMotionVideo({
@@ -251,8 +248,6 @@ async function run() {
     outputBaseName: 'linen-macro-video',
     durationSec: 5
   });
-
-  console.log('Pipeline completo de ativos editoriais e videos finalizado com sucesso!');
 }
 
 run().catch(err => {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
@@ -10,10 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 @Component({
   selector: 'app-hero-editorial',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section id="topo" #heroSection class="relative bg-vanilla-bone overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-25 mix-blend-multiply"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.14]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8 pt-24 pb-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end elastic-scroll-target">
@@ -28,7 +29,7 @@ gsap.registerPlugin(ScrollTrigger);
 
           <div class="lg:col-span-4 flex flex-col items-start lg:items-end justify-end gap-5">
             <p class="text-sm sm:text-[15px] text-mineral-taupe leading-relaxed max-w-[38ch] lg:text-right">
-              Peças esculpidas para iluminar a pele com delicadeza mineral e consultoria individualizada para todo o país.
+              Peças selecionadas para iluminar a pele com delicadeza e atendimento individualizado para todo o país.
             </p>
             <div class="flex flex-wrap items-center gap-3">
               <a
@@ -61,39 +62,32 @@ gsap.registerPlugin(ScrollTrigger);
         </div>
       </div>
 
-      <div #archPinWrapper class="relative w-full min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 pb-8">
+      <div #archPinWrapper class="relative w-full min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 pt-20 pb-6">
         <div
           #archContainer
-          class="relative w-full max-w-[680px] h-[74dvh] sm:h-[80dvh] arch-mask-frame border border-travertine bg-travertine/40 overflow-hidden shadow-[0_24px_60px_rgba(30,30,28,0.08)]"
+          class="relative w-full max-w-[680px] h-[72dvh] sm:h-[76dvh] arch-mask-frame border border-travertine bg-travertine/40 overflow-hidden shadow-[0_24px_60px_rgba(30,30,28,0.08)]"
         >
           <video
             #heroVideo
             src="assets/editorial/hero-arch-video.webm"
             poster="assets/editorial/editorial-macro-frame-2.jpg"
+            preload="metadata"
             muted
             loop
             playsinline
-            preload="auto"
+            disablePictureInPicture
             class="w-full h-full object-cover scale-105"
           ></video>
 
-          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/55 via-onyx-graphite/10 to-transparent"></div>
+          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/50 via-transparent to-transparent"></div>
 
           <div
             #archOverlayText
-            class="absolute bottom-8 left-6 right-6 sm:bottom-12 sm:left-12 sm:right-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4 text-vanilla-bone"
+            class="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 sm:right-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-vanilla-bone"
           >
-            <div>
-              <p class="font-editorial italic text-2xl sm:text-4xl leading-[1.1] pb-1">
-                Luz, pedra travertino e metal nobre
-              </p>
-              <p class="text-xs sm:text-sm text-soft-linen/85 max-w-[46ch] mt-1">
-                Cada peça é selecionada individualmente e enviada em embalagem de algodão com acabamento em relevo seco.
-              </p>
-            </div>
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-onyx-graphite/75 backdrop-blur-md border border-travertine/30 text-vanilla-bone text-xs whitespace-nowrap self-start sm:self-auto">
-              <span>Despacho Segurado Nacional</span>
-            </div>
+            <p class="font-editorial italic text-xl sm:text-2xl leading-[1.2] text-vanilla-bone/95">
+              Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
+            </p>
           </div>
         </div>
       </div>
@@ -111,6 +105,8 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
   private readonly scrollService = inject(ScrollPhysicsService);
   private readonly ngZone = inject(NgZone);
   private ctx: gsap.Context | null = null;
+  private observer: IntersectionObserver | null = null;
+  private isVisible = false;
 
   scrollToCollections(event: Event): void {
     event.preventDefault();
@@ -118,20 +114,36 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const videoEl = this.heroVideo?.nativeElement;
-    if (videoEl) {
-      videoEl.muted = true;
-      videoEl.play().catch(() => {});
-    }
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
     this.ngZone.runOutsideAngular(() => {
-      this.ctx = gsap.context(() => {
-        const arch = this.archContainer.nativeElement;
-        const wrapper = this.archPinWrapper.nativeElement;
-        const overlay = this.archOverlayText.nativeElement;
+      const videoEl = this.heroVideo?.nativeElement;
+      const arch = this.archContainer?.nativeElement;
+      const wrapper = this.archPinWrapper?.nativeElement;
+      const overlay = this.archOverlayText?.nativeElement;
 
+      if (!videoEl || !arch || !wrapper || !overlay) return;
+
+      videoEl.muted = true;
+      videoEl.disablePictureInPicture = true;
+
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          this.isVisible = Boolean(entry?.isIntersecting);
+          if (this.isVisible) {
+            arch.style.willChange = 'transform, clip-path';
+            videoEl.play().catch(() => {});
+          } else {
+            arch.style.willChange = 'auto';
+            videoEl.pause();
+          }
+        },
+        { rootMargin: '150px 0px' }
+      );
+      this.observer.observe(wrapper);
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      this.ctx = gsap.context(() => {
         gsap.set(arch, {
           maxWidth: '640px',
           height: '74dvh',
@@ -145,7 +157,7 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
             start: 'top top',
             end: '+=115%',
             pin: true,
-            scrub: 1.2,
+            scrub: 1.1,
             invalidateOnRefresh: true
           }
         });
@@ -153,7 +165,7 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
         tl.to(arch, {
           maxWidth: '1400px',
           width: '100%',
-          height: '92dvh',
+          height: '84dvh',
           borderTopLeftRadius: '28px',
           borderTopRightRadius: '28px',
           ease: 'elastic.out(1, 0.75)',
@@ -161,32 +173,22 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
         }, 0);
 
         tl.fromTo(overlay,
-          { y: 24, opacity: 0.75 },
+          { y: 18, opacity: 0.78 },
           { y: 0, opacity: 1, ease: 'power2.out', duration: 0.8 },
           0.1
         );
-
-        if (videoEl) {
-          videoEl.addEventListener('loadedmetadata', () => {
-            const dur = videoEl.duration || 5;
-            ScrollTrigger.create({
-              trigger: wrapper,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.4,
-              onUpdate: (self) => {
-                if (videoEl.readyState >= 2 && Number.isFinite(dur) && dur > 0) {
-                  videoEl.currentTime = Math.min(dur - 0.05, Math.max(0, self.progress * dur));
-                }
-              }
-            });
-          }, { once: true });
-        }
       }, this.heroSection.nativeElement);
     });
   }
 
   ngOnDestroy(): void {
-    this.ctx?.revert();
+    this.ngZone.runOutsideAngular(() => {
+      this.observer?.disconnect();
+      this.observer = null;
+      if (this.archContainer?.nativeElement) {
+        this.archContainer.nativeElement.style.willChange = 'auto';
+      }
+      this.ctx?.revert();
+    });
   }
 }

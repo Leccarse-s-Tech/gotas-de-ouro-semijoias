@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
 import { ScrollPhysicsService } from '../../services/scroll-physics.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <header
@@ -123,7 +124,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
       >
         <div class="flex flex-col gap-4">
           <div class="inline-flex self-start items-center gap-2 px-3 py-1 rounded-full bg-soft-linen border border-travertine text-[11px] tracking-[0.08em] text-celadon-slate">
-            <span>Envio seguro para todo o Brasil</span>
+            <span>Envio para todo o Brasil</span>
           </div>
           <a href="#manifesto" (click)="navigate($event, '#manifesto')" class="text-base font-editorial italic text-onyx-graphite py-1 border-b border-travertine/60">
             Essência &amp; Curadoria

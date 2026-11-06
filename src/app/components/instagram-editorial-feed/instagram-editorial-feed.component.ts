@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
 
 @Component({
   selector: 'app-instagram-editorial-feed',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section class="relative py-24 sm:py-32 bg-vanilla-bone border-t border-travertine overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-25 mix-blend-multiply"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.14]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 elastic-scroll-target">
@@ -17,7 +18,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
               Diário visual &amp; <span class="italic font-light leading-[1.1] pb-1 inline-block">novas criações.</span>
             </h2>
             <p class="mt-3 text-sm sm:text-base text-mineral-taupe max-w-[52ch]">
-              Acompanhe nossos lançamentos, composições no colo e bastidores da curadoria no Instagram oficial da Gotas de Ouro.
+              Acompanhe nossos lançamentos, composições e novidades da curadoria no Instagram oficial da Gotas de Ouro.
             </p>
           </div>
 
@@ -55,10 +56,11 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
                 #linenVideo
                 src="assets/editorial/linen-macro-video.webm"
                 poster="assets/editorial/joia-4-editorial.jpg"
+                preload="metadata"
                 muted
                 loop
                 playsinline
-                preload="metadata"
+                disablePictureInPicture
                 class="w-full h-full object-cover transition-transform duration-700 ease-spring group-hover:scale-105"
               ></video>
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/50 via-transparent to-transparent"></div>
@@ -83,14 +85,15 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
               <div class="overflow-hidden rounded-xl aspect-[16/11]">
                 <img
                   src="assets/editorial/editorial-macro-frame-2.jpg"
-                  alt="Composicao editorial em travertino"
+                  alt="Composição delicada de semijoias Gotas de Ouro"
                   class="w-full h-full object-cover transition-transform duration-700 ease-spring group-hover:scale-105"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div class="pt-3 px-1 flex items-center justify-between text-xs text-mineral-taupe">
-                <span>Luz da manhã sobre travertino</span>
-                <span>Ensaio Editorial</span>
+                <span>Brilho sutil &amp; elegância</span>
+                <span>Curadoria Gotas de Ouro</span>
               </div>
             </a>
 
@@ -103,14 +106,15 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
               <div class="overflow-hidden rounded-xl aspect-[16/11]">
                 <img
                   src="assets/editorial/editorial-macro-frame-3.jpg"
-                  alt="Composicao editorial em linho cru"
+                  alt="Detalhe de semijoia selecionada Gotas de Ouro"
                   class="w-full h-full object-cover transition-transform duration-700 ease-spring group-hover:scale-105"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div class="pt-3 px-1 flex items-center justify-between text-xs text-mineral-taupe">
-                <span>Trama de linho &amp; Moissanite</span>
-                <span>Detalhe Macro</span>
+                <span>Delicadeza em cada detalhe</span>
+                <span>Acervo Selecionado</span>
               </div>
             </a>
 
@@ -120,7 +124,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
                   Deseja receber vídeos personalizados de uma peça?
                 </p>
                 <p class="text-xs sm:text-sm text-mineral-taupe mt-1 max-w-[50ch]">
-                  Nossas consultoras enviam demonstrações em vídeo sob luz natural pelo WhatsApp e preparam seu envio para qualquer cidade do Brasil.
+                  Nossas consultoras enviam demonstrações em vídeo pelo WhatsApp e preparam seu envio para qualquer cidade do Brasil.
                 </p>
               </div>
               <a
@@ -145,18 +149,42 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
     </section>
   `
 })
-export class InstagramEditorialFeedComponent implements AfterViewInit {
+export class InstagramEditorialFeedComponent implements AfterViewInit, OnDestroy {
   @ViewChild('linenVideo') linenVideo!: ElementRef<HTMLVideoElement>;
 
   readonly instagramProfileUrl = 'https://www.instagram.com/gotasdeouro.bonsucesso/';
   readonly instagramReelUrl = 'https://www.instagram.com/p/DeSDjxkhj4a/';
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
 
+  private readonly ngZone = inject(NgZone);
+  private observer: IntersectionObserver | null = null;
+
   ngAfterViewInit(): void {
-    const vid = this.linenVideo?.nativeElement;
-    if (vid) {
+    this.ngZone.runOutsideAngular(() => {
+      const vid = this.linenVideo?.nativeElement;
+      if (!vid) return;
       vid.muted = true;
-      vid.play().catch(() => {});
-    }
+      vid.disablePictureInPicture = true;
+
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry?.isIntersecting) {
+            vid.play().catch(() => {});
+          } else {
+            vid.pause();
+          }
+        },
+        { rootMargin: '120px 0px' }
+      );
+      this.observer.observe(vid);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.observer?.disconnect();
+      this.observer = null;
+    });
   }
 }

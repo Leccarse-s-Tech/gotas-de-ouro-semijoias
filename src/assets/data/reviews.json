@@ -11,196 +11,49 @@
   ],
   "reviews": [
     {
-      "id": 1,
       "author": "Beatriz Silva",
-      "badge": "1 avaliação - 1 foto",
-      "rating": 5,
-      "relativeTime": "6 meses atrás",
+      "stars": 5,
       "text": "Ótimo atendimento, peças excelente, muita opção, totalmente satisfeita com minha compra"
     },
     {
-      "id": 2,
       "author": "Ademir Pena",
-      "badge": "1 avaliação",
-      "rating": 5,
-      "relativeTime": "5 meses atrás",
-      "text": "Muito bom, já comprei outras vezes, ótimo atendimento,muitas opções para presentear, voltarei mais vezes."
+      "stars": 5,
+      "text": "Muito bom, já comprei outras vezes, ótimo atendimento, muitas opções para presentear, voltarei mais vezes."
     },
     {
-      "id": 3,
       "author": "Márcia Cidreira",
-      "badge": "9 avaliações - 1 foto",
-      "rating": 5,
-      "relativeTime": "3 semanas atrás",
+      "stars": 5,
       "text": "Ótimo atendimento, as peças são lindas com ótimos preços, saímos de lá muito satisfeitos."
     },
     {
-      "id": 4,
       "author": "Priscila Imafuku",
-      "badge": "5 avaliações",
-      "rating": 5,
-      "relativeTime": "5 meses atrás",
+      "stars": 5,
       "text": "Adoro esse loja, semijoias maravilhosas e cheias de elegância, o atendimento também é impecável. As atendentes são super atenciosas, simpáticas e fazem a gente se sentir especial do começo ao fim."
     },
     {
-      "id": 5,
       "author": "nicolasz",
-      "badge": "1 avaliação",
-      "rating": 5,
-      "relativeTime": "Editado 3 meses atrás",
+      "stars": 5,
       "text": "Atendimento excelente e uma loja muito bonita! As peças são de ótima qualidade, com opções lindas para todos os estilos. Fui muito bem atendido e com certeza voltarei mais vezes. Recomendo!"
     },
     {
-      "id": 6,
-      "author": "Camila Albuquerque",
-      "badge": "Local Guide - 18 avaliações",
-      "rating": 5,
-      "relativeTime": "1 mês atrás",
-      "text": "Atendimento impecável pelo WhatsApp e na loja. As peças têm um banho maravilhoso, acabamento de alta joalheria e chegaram perfeitamente embaladas."
+      "author": "Elaine Leoni",
+      "stars": 5,
+      "text": "Genteee, eu amo essa loja já compro a quase 3 anos e minhas peças estão perfeitas!!!"
     },
     {
-      "id": 7,
-      "author": "Fernanda Vasconcelos",
-      "badge": "6 avaliações",
-      "rating": 5,
-      "relativeTime": "1 mês atrás",
-      "text": "Sou apaixonada pelas semijoias da Gotas de Ouro. Já tenho colares e brincos há mais de um ano e o brilho continua intacto. Qualidade diferenciada."
+      "author": "Sophia Paganelli",
+      "stars": 5,
+      "text": "Me senti super acolhida dentro da loja, as meninas que trabalham no atendimento são extremamente atenciosas e além das joias, que são super lindas."
     },
     {
-      "id": 8,
-      "author": "Juliana Mendes Rocha",
-      "badge": "12 avaliações",
-      "rating": 5,
-      "relativeTime": "2 meses atrás",
-      "text": "Comprei um conjunto de colar e brinco para um casamento e recebi muitos elogios. As meninas são super pacientes e ajudam a escolher a peça ideal."
+      "author": "Larissa Xavier",
+      "stars": 5,
+      "text": "Atendimento excelente, loja com peças lindas e preços acessíveis! Super recomendo"
     },
     {
-      "id": 9,
-      "author": "Patrícia Siqueira",
-      "badge": "4 avaliações",
-      "rating": 5,
-      "relativeTime": "2 meses atrás",
-      "text": "As peças em madrepérola e zircônia são de uma delicadeza única. Atendimento acolhedor, ambiente lindo e cheiroso, dá vontade de levar tudo."
-    },
-    {
-      "id": 10,
-      "author": "Renata Tavares",
-      "badge": "Local Guide - 27 avaliações",
-      "rating": 5,
-      "relativeTime": "2 meses atrás",
-      "text": "Excelente curadoria de semijoias! Gosto muito porque têm desde peças minimalistas para o dia a dia até conjuntos mais sofisticados para festas."
-    },
-    {
-      "id": 11,
-      "author": "Gabriela Monteiro",
-      "badge": "3 avaliações",
-      "rating": 5,
-      "relativeTime": "3 meses atrás",
-      "text": "Fiz minha escolha pelo WhatsApp e fui super bem atendida, me mandaram vídeos detalhados de cada colar no pescoço. Experiência nota mil!"
-    },
-    {
-      "id": 12,
-      "author": "Carolina Duarte",
-      "badge": "8 avaliações",
-      "rating": 5,
-      "relativeTime": "3 meses atrás",
-      "text": "Minha loja favorita para comprar presentes. A embalagem é super caprichada e as semijoias não dão alergia nenhuma, o banho é realmente excelente."
-    },
-    {
-      "id": 13,
-      "author": "Aline Ferreira Santos",
-      "badge": "5 avaliações",
-      "rating": 5,
-      "relativeTime": "3 meses atrás",
-      "text": "Atendimento nota 10! As vendedoras demonstram muito carinho e conhecimento sobre cada peça. Os brincos escovados são perfeitos."
-    },
-    {
-      "id": 14,
-      "author": "Mariana Costa Lima",
-      "badge": "Local Guide - 15 avaliações",
-      "rating": 5,
-      "relativeTime": "4 meses atrás",
-      "text": "Comprei um colar de Moissanite e fiquei impressionada com o brilho da pedra. Parece joia maciça de vitrine internacional. Recomendo de olhos fechados."
-    },
-    {
-      "id": 15,
-      "author": "Letícia Barros",
-      "badge": "2 avaliações",
-      "rating": 5,
-      "relativeTime": "4 meses atrás",
-      "text": "Sempre que preciso de um presente especial passo na Gotas de Ouro. Variedade incrível, peças modernas e um atendimento que faz toda a diferença."
-    },
-    {
-      "id": 16,
-      "author": "Bianca Nogueira",
-      "badge": "7 avaliações",
-      "rating": 5,
-      "relativeTime": "4 meses atrás",
-      "text": "Loja linda, organizada e com peças de extremo bom gosto. O atendimento da equipe é sempre muito gentil e sem pressa."
-    },
-    {
-      "id": 17,
-      "author": "Tatiane Ribeiro",
-      "badge": "11 avaliações",
-      "rating": 5,
-      "relativeTime": "5 meses atrás",
-      "text": "Qualidade impecável das correntes e fechos. Tenho pele sensível e uso os brincos da Gotas de Ouro todos os dias com total conforto."
-    },
-    {
-      "id": 18,
-      "author": "Vanessa Andrade",
-      "badge": "3 avaliações",
-      "rating": 5,
-      "relativeTime": "5 meses atrás",
-      "text": "Fui atendida com muita atenção e carinho. Escolhi um conjunto dourado orgânico que vi no Instagram e pessoalmente consegue ser ainda mais bonito."
-    },
-    {
-      "id": 19,
-      "author": "Daniela Martins",
-      "badge": "Local Guide - 31 avaliações",
-      "rating": 5,
-      "relativeTime": "6 meses atrás",
-      "text": "Referência em semijoias de qualidade. O cuidado nos detalhes, desde a vitrine até a consultoria pelo WhatsApp, mostra o profissionalismo da marca."
-    },
-    {
-      "id": 20,
-      "author": "Larissa Cavalcanti",
-      "badge": "4 avaliações",
-      "rating": 5,
-      "relativeTime": "6 meses atrás",
-      "text": "Amei minha experiência! As peças têm acabamento perfeito e brilho super elegante, nada daquele dourado exagerado. Voltarei com certeza."
-    },
-    {
-      "id": 21,
-      "author": "Helena Figueiredo",
-      "badge": "9 avaliações",
-      "rating": 5,
-      "relativeTime": "7 meses atrás",
-      "text": "Melhor loja de semijoias da região e ótimo atendimento online também. Comprei para minha mãe e para mim, amamos cada detalhe."
-    },
-    {
-      "id": 22,
-      "author": "Bruna Gonçalves",
-      "badge": "6 avaliações",
-      "rating": 5,
-      "relativeTime": "7 meses atrás",
-      "text": "Atendimento maravilhoso, meninas super educadas e prestativas. As peças possuem garantia e duram muitíssimo bem."
-    },
-    {
-      "id": 23,
-      "author": "Natália Pires",
-      "badge": "2 avaliações",
-      "rating": 5,
-      "relativeTime": "8 meses atrás",
-      "text": "Design super atual e sofisticado. Os conjuntos de flor escovada e madrepérola são verdadeiras obras de arte."
-    },
-    {
-      "id": 24,
-      "author": "Amanda Oliveira",
-      "badge": "Local Guide - 19 avaliações",
-      "rating": 5,
-      "relativeTime": "8 meses atrás",
-      "text": "Impossível entrar na loja ou ver o catálogo e escolher uma peça só. Tudo de muito bom gosto e com atendimento humano e acolhedor."
+      "author": "CRISTIANE RODRIGUES COELHO",
+      "stars": 5,
+      "text": "O atendimento é ótimo, personalizado e diferenciado. As meninas são muito atenciosas, te ajudam a escolher a melhor peça que combina com você. Se ainda não conhece, não perca a oportunidade. Difícil resistir a tantas peças lindas."
     }
   ]
 }

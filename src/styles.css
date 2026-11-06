@@ -9,9 +9,6 @@
   --mineral-taupe: #8A857B;
   --celadon-slate: #525A56;
   --onyx-graphite: #1E1E1C;
-  --scroll-stretch-y: 1;
-  --scroll-shift-y: 0px;
-  --scroll-skew-y: 0deg;
 }
 
 html.lenis,
@@ -42,28 +39,36 @@ body {
   font-family: 'Cormorant Garamond', Georgia, serif;
 }
 
+.noise-gpu-layer {
+  background-image: url('/assets/editorial/noise-tile.png');
+  background-repeat: repeat;
+  background-size: 150px 150px;
+  opacity: 0.03;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
 .elastic-scroll-target {
-  transform: translate3d(0, var(--scroll-shift-y, 0px), 0) scaleY(var(--scroll-stretch-y, 1)) skewY(var(--scroll-skew-y, 0deg));
   transform-origin: center center;
-  will-change: transform;
 }
 
 .arch-mask-frame {
   border-radius: 999px 999px 0 0;
   overflow: hidden;
-  will-change: transform, border-radius, clip-path;
 }
 
 .texture-surface-linen {
   background-image: url('/assets/editorial/texture-linen.jpg');
   background-size: 640px auto;
   background-repeat: repeat;
+  transform: translateZ(0);
 }
 
 .texture-surface-travertine {
   background-image: url('/assets/editorial/texture-travertine.jpg');
   background-size: 720px auto;
   background-repeat: repeat;
+  transform: translateZ(0);
 }
 
 .hairline-border {
@@ -79,29 +84,14 @@ body {
   }
 }
 
-@keyframes marqueeRight {
-  0% {
-    transform: translate3d(-50%, 0, 0);
-  }
-  100% {
-    transform: translate3d(0%, 0, 0);
-  }
-}
-
 .animate-marquee-left {
   display: flex;
   width: max-content;
-  animation: marqueeLeft 68s linear infinite;
+  animation: marqueeLeft 58s linear infinite;
+  transform: translateZ(0);
 }
 
-.animate-marquee-right {
-  display: flex;
-  width: max-content;
-  animation: marqueeRight 74s linear infinite;
-}
-
-.animate-marquee-left:hover,
-.animate-marquee-right:hover {
+.animate-marquee-left:hover {
   animation-play-state: paused;
 }
 
@@ -109,8 +99,7 @@ body {
   .elastic-scroll-target {
     transform: none !important;
   }
-  .animate-marquee-left,
-  .animate-marquee-right {
+  .animate-marquee-left {
     animation: none !important;
   }
 }

@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
 import reviewsData from '../../../assets/data/reviews.json';
 
 @Component({
   selector: 'app-physical-boutique',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section id="boutique" class="relative py-24 sm:py-36 bg-soft-linen border-t border-travertine overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-20 mix-blend-multiply"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.14]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -23,7 +24,7 @@ import reviewsData from '../../../assets/data/reviews.json';
             </h2>
 
             <p class="mt-5 text-sm sm:text-base text-mineral-taupe leading-relaxed">
-              Além de despachar diariamente para todas as capitais e interior do Brasil através do nosso atendimento digital personalizado, a Gotas de Ouro mantém sua boutique física na Grande São Paulo como ponto de encontro, curadoria presencial e lastro de confiança.
+              Além de enviar diariamente para todas as capitais e interior do Brasil através do nosso atendimento digital personalizado, a Gotas de Ouro mantém sua boutique física na Grande São Paulo como ponto de encontro, curadoria presencial e lastro de confiança.
             </p>
 
             <div class="mt-8 space-y-5 pt-6 border-t border-travertine">
@@ -90,6 +91,7 @@ import reviewsData from '../../../assets/data/reviews.json';
                   alt="Boutique fisica Gotas de Ouro Semijoias"
                   class="w-full aspect-[16/10] object-cover transition-transform duration-700 ease-spring hover:scale-105"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div class="pt-3 px-2 flex items-center justify-between text-xs text-mineral-taupe">
@@ -105,6 +107,7 @@ import reviewsData from '../../../assets/data/reviews.json';
                   alt="Entrada da boutique fisica Gotas de Ouro"
                   class="w-full aspect-[3/4] object-cover transition-transform duration-700 ease-spring hover:scale-105"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div class="pt-3 px-2 flex items-center justify-between text-xs text-mineral-taupe">

@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
 import { ScrollPhysicsService } from '../../services/scroll-physics.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <footer class="relative bg-soft-linen border-t border-travertine pt-16 pb-12 overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-20 mix-blend-multiply"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.14]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-14 border-b border-travertine">
@@ -18,9 +19,11 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
               src="assets/editorial/logo-gotas-de-ouro.svg"
               alt="Gotas de Ouro Semijoias"
               class="h-16 w-auto object-contain -ml-2"
+              loading="lazy"
+              decoding="async"
             />
             <p class="mt-4 text-sm text-mineral-taupe max-w-[40ch] leading-relaxed">
-              Vitrine editorial de semijoias com acabamento nobre, consultoria individualizada via WhatsApp e despacho segurado para todo o território nacional.
+              Vitrine editorial de semijoias com acabamento primoroso, atendimento individualizado via WhatsApp e envio cuidadoso para todo o território nacional.
             </p>
           </div>
 
@@ -44,7 +47,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
               </li>
               <li>
                 <a href="#avaliacoes" (click)="navigate($event, '#avaliacoes')" class="hover:text-onyx-graphite transition-colors">
-                  Avaliações Verificadas
+                  Avaliações no Google
                 </a>
               </li>
               <li>

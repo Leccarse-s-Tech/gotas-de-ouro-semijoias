@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core';
 import { CuratedCollectionComponent } from './components/curated-collection/curated-collection.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeroEditorialComponent } from './components/hero-editorial/hero-editorial.component';
@@ -14,6 +14,7 @@ import { ScrollPhysicsService } from './services/scroll-physics.service';
 @Component({
   selector: 'app-root',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     NavbarComponent,
@@ -27,20 +28,7 @@ import { ScrollPhysicsService } from './services/scroll-physics.service';
     FooterComponent
   ],
   template: `
-    <div class="pointer-events-none fixed inset-0 z-50 overflow-hidden" aria-hidden="true">
-      <svg class="w-full h-full opacity-[0.038]">
-        <filter id="editorial-film-grain">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.82"
-            numOctaves="4"
-            stitchTiles="stitch"
-          />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#editorial-film-grain)" />
-      </svg>
-    </div>
+    <div class="noise-gpu-layer fixed inset-0 z-50" aria-hidden="true"></div>
 
     <app-navbar></app-navbar>
 
@@ -57,10 +45,14 @@ import { ScrollPhysicsService } from './services/scroll-physics.service';
     <app-footer></app-footer>
   `
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnDestroy {
   private readonly scrollPhysics = inject(ScrollPhysicsService);
 
   ngAfterViewInit(): void {
     this.scrollPhysics.init();
+  }
+
+  ngOnDestroy(): void {
+    this.scrollPhysics.destroy();
   }
 }

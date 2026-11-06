@@ -59,7 +59,22 @@ function auditCodebase() {
     if (rel.startsWith('src') && (/#ffffff/i.test(content) || /#000000/i.test(content))) {
       violations.push(`Cor proibida (#FFFFFF ou #000000) em: ${rel}`);
     }
+
+    if (rel.startsWith('src') && /feTurbulence/i.test(content)) {
+      violations.push(`feTurbulence detectado em: ${rel}`);
+    }
+
+    if (rel.endsWith('.component.ts') && !content.includes('ChangeDetectionStrategy.OnPush')) {
+      violations.push(`Componente sem OnPush: ${rel}`);
+    }
   }
+
+  const editorialDir = path.join(__dirname, '..', 'src', 'assets', 'editorial');
+  ['brand-deboss-box.jpg', 'brand-limestone-plaque.jpg'].forEach(fakeImg => {
+    if (fs.existsSync(path.join(editorialDir, fakeImg))) {
+      violations.push(`Imagem falsa nao removida: ${fakeImg}`);
+    }
+  });
 
   console.log('Arquivos auditados:', allFiles.length);
   console.log('Violacoes de codigo encontradas:', violations.length);
@@ -79,38 +94,78 @@ async function validateBrowser() {
   desktopPage.on('pageerror', err => consoleErrors.push(err.message));
 
   await desktopPage.goto('http://localhost:4200', { waitUntil: 'networkidle', timeout: 30000 });
-  await desktopPage.waitForTimeout(2000);
+  await desktopPage.waitForTimeout(1500);
 
   await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-hero.jpg'), quality: 90 });
 
   await desktopPage.evaluate(() => window.scrollTo(0, 950));
-  await desktopPage.waitForTimeout(800);
+  await desktopPage.waitForTimeout(700);
   await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-arch-expanded.jpg'), quality: 90 });
 
-  await desktopPage.evaluate(() => document.querySelector('#colecoes')?.scrollIntoView());
-  await desktopPage.waitForTimeout(800);
+  await desktopPage.evaluate(() => document.querySelector('#manifesto')?.scrollIntoView());
+  await desktopPage.waitForTimeout(700);
+  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-manifesto.jpg'), quality: 90 });
+
+  await desktopPage.evaluate(() => {
+    const el = document.querySelector('#colecoes');
+    if (el) window.scrollTo(0, el.offsetTop + 320);
+  });
+  await desktopPage.waitForTimeout(700);
   await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-collections.jpg'), quality: 90 });
 
+  await desktopPage.evaluate(() => document.querySelector('#atelier-filme')?.scrollIntoView());
+  await desktopPage.waitForTimeout(700);
+  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-scrub.jpg'), quality: 90 });
+
   await desktopPage.evaluate(() => document.querySelector('#avaliacoes')?.scrollIntoView());
-  await desktopPage.waitForTimeout(800);
+  await desktopPage.waitForTimeout(700);
   await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-reviews.jpg'), quality: 90 });
 
   await desktopPage.evaluate(() => document.querySelector('#boutique')?.scrollIntoView());
-  await desktopPage.waitForTimeout(800);
+  await desktopPage.waitForTimeout(700);
   await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-boutique.jpg'), quality: 90 });
+
+  await desktopPage.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await desktopPage.waitForTimeout(700);
+  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-instagram.jpg'), quality: 90 });
 
   const desktopAudit = await desktopPage.evaluate(() => {
     const imgs = Array.from(document.querySelectorAll('img'));
     const brokenImgs = imgs.filter(img => !img.complete || img.naturalWidth === 0).map(img => img.src);
     const bodyText = document.body.innerText;
+    const forbiddenCopyTerms = [
+      'luz natural',
+      'algodão prensado',
+      'relevo seco',
+      'pedra travertino',
+      'metal nobre',
+      'acabamento nobre',
+      'moissanite',
+      'madrepérola',
+      'mariana costa lima',
+      'letícia barros',
+      'bianca nogueira',
+      'tatiane ribeiro',
+      'meses atrás',
+      'semanas atrás',
+      'local guide'
+    ];
+    const detectedForbiddenCopy = forbiddenCopyTerms.filter(term =>
+      bodyText.toLowerCase().includes(term.toLowerCase())
+    );
+
+    const reviewCards = Array.from(document.querySelectorAll('#avaliacoes article'));
+
     return {
       title: document.title,
       imageCount: imgs.length,
       brokenImgs,
       videoCount: document.querySelectorAll('video').length,
+      reviewCardCountInDom: reviewCards.length,
       hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
       containsBonsucessoVisible: /bonsucesso/i.test(bodyText),
-      containsForbiddenCartWords: /\b(carrinho|adicionar ao carrinho|parcelamento|sem juros)\b/i.test(bodyText)
+      containsForbiddenCartWords: /\b(carrinho|adicionar ao carrinho|parcelamento|sem juros)\b/i.test(bodyText),
+      detectedForbiddenCopy
     };
   });
 
@@ -122,12 +177,20 @@ async function validateBrowser() {
     hasTouch: true
   });
   await mobilePage.goto('http://localhost:4200', { waitUntil: 'networkidle', timeout: 30000 });
-  await mobilePage.waitForTimeout(1500);
+  await mobilePage.waitForTimeout(1200);
   await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-hero.jpg'), quality: 90 });
 
+  await mobilePage.evaluate(() => document.querySelector('#manifesto')?.scrollIntoView());
+  await mobilePage.waitForTimeout(700);
+  await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-manifesto.jpg'), quality: 90 });
+
   await mobilePage.evaluate(() => document.querySelector('#colecoes')?.scrollIntoView());
-  await mobilePage.waitForTimeout(800);
+  await mobilePage.waitForTimeout(700);
   await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-collections.jpg'), quality: 90 });
+
+  await mobilePage.evaluate(() => document.querySelector('#avaliacoes')?.scrollIntoView());
+  await mobilePage.waitForTimeout(700);
+  await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-reviews.jpg'), quality: 90 });
 
   const mobileAudit = await mobilePage.evaluate(() => ({
     hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
