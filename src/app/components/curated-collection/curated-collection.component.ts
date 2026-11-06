@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,8 +9,6 @@ export interface EditorialPiece {
   id: string;
   alt: string;
   image: string;
-  layoutClass: string;
-  aspectClass: string;
   archTop: boolean;
 }
 
@@ -19,17 +16,17 @@ export interface EditorialPiece {
   selector: 'app-curated-collection',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MagneticSpringDirective],
+  imports: [CommonModule],
   template: `
-    <section id="colecoes" #collectionSection class="relative py-24 sm:py-36 bg-vanilla-bone border-t border-travertine overflow-hidden">
+    <section id="colecoes" #collectionSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
-        <div class="max-w-[680px] mb-16 sm:mb-24">
+      <div class="relative z-10 max-w-7xl mx-auto w-full">
+        <div class="max-w-[680px] mb-10 sm:mb-16">
           <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">
             Acervo Autoral
           </p>
-          <h2 class="font-editorial text-4xl sm:text-5xl lg:text-[58px] leading-[1.06] tracking-tight text-onyx-graphite">
+          <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-onyx-graphite">
             Quatro estudos sobre <span class="italic font-light leading-[1.1] pb-1 inline-block">luz e superfície.</span>
           </h2>
           <p class="mt-4 text-sm sm:text-base text-mineral-taupe leading-relaxed max-w-[58ch]">
@@ -37,21 +34,18 @@ export interface EditorialPiece {
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 w-full">
           <article
             *ngFor="let piece of pieces()"
-            [ngClass]="piece.layoutClass"
-            class="collection-item group relative gpu-animated"
+            class="collection-item w-full max-w-full min-w-0 overflow-hidden relative gpu-animated"
           >
             <div
-              appMagneticSpring
-              [magneticStrength]="0.06"
-              class="relative border border-[#D8D3C8] bg-soft-linen p-3 sm:p-4 hover:border-celadon-slate gpu-animated"
-              [ngClass]="piece.archTop ? 'rounded-t-full overflow-hidden' : 'rounded-2xl overflow-hidden'"
+              class="w-full max-w-full min-w-0 border border-[#D8D3C8] bg-soft-linen p-2.5 sm:p-3.5 hover:border-celadon-slate overflow-hidden"
+              [ngClass]="piece.archTop ? 'rounded-t-[999px] rounded-b-2xl' : 'rounded-2xl'"
             >
               <div
-                class="relative overflow-hidden bg-travertine/30"
-                [ngClass]="[piece.aspectClass, piece.archTop ? 'rounded-t-full' : 'rounded-xl']"
+                class="w-full max-w-full overflow-hidden relative aspect-[4/5] bg-travertine/30"
+                [ngClass]="piece.archTop ? 'rounded-t-[999px] rounded-b-xl' : 'rounded-xl'"
               >
                 <img
                   [src]="piece.image"
@@ -61,17 +55,17 @@ export interface EditorialPiece {
                   decoding="async"
                 />
 
-                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/55 via-transparent to-transparent"></div>
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/60 via-transparent to-transparent"></div>
 
-                <div class="absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6 flex items-end justify-start">
+                <div class="absolute inset-x-0 bottom-4 sm:bottom-6 flex items-end justify-center pointer-events-none">
                   <a
                     [href]="whatsappUrl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-3 px-5 py-3 rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8]/30 text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate"
+                    class="pointer-events-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm px-4 py-2.5 max-w-[calc(100%-2rem)] rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8]/30 font-medium tracking-[0.02em] hover:bg-celadon-slate overflow-hidden"
                   >
-                    <span class="whitespace-nowrap">Consultar disponibilidade no WhatsApp</span>
-                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <span class="truncate">Consultar disponibilidade no WhatsApp</span>
+                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
                     </svg>
                   </a>
@@ -89,39 +83,31 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
 
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
   private readonly ngZone = inject(NgZone);
-  private ctx: gsap.Context | null = null;
+  private mm: gsap.MatchMedia | null = null;
 
   readonly pieces = signal<EditorialPiece[]>([
     {
       id: 'peca-01',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 01',
       image: 'assets/editorial/joia-1-editorial.webp',
-      layoutClass: 'md:col-span-7',
-      aspectClass: 'aspect-[4/5]',
       archTop: true
     },
     {
       id: 'peca-02',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 02',
       image: 'assets/editorial/joia-2-editorial.webp',
-      layoutClass: 'md:col-span-5 md:mt-24',
-      aspectClass: 'aspect-[4/5]',
       archTop: false
     },
     {
       id: 'peca-03',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 03',
       image: 'assets/editorial/joia-3-editorial.webp',
-      layoutClass: 'md:col-span-5',
-      aspectClass: 'aspect-[4/5]',
       archTop: false
     },
     {
       id: 'peca-04',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 04',
       image: 'assets/editorial/joia-4-editorial.webp',
-      layoutClass: 'md:col-span-7 md:mt-16',
-      aspectClass: 'aspect-[4/5]',
       archTop: true
     }
   ]);
@@ -130,25 +116,27 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
     if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     this.ngZone.runOutsideAngular(() => {
-      this.ctx = gsap.context(() => {
-        const items = gsap.utils.toArray<HTMLElement>('.collection-item');
-        items.forEach((item, idx) => {
+      const rootEl = this.collectionSection?.nativeElement;
+      if (!rootEl) return;
+
+      this.mm = gsap.matchMedia();
+
+      this.mm.add('(min-width: 768px)', () => {
+        const items = gsap.utils.toArray<HTMLElement>('.collection-item', rootEl);
+        items.forEach((item) => {
           const photo = item.querySelector<HTMLElement>('.collection-photo');
           gsap.fromTo(
             item,
-            { yPercent: 6, force3D: true },
+            { y: 24, force3D: true },
             {
-              yPercent: 0,
+              y: 0,
               force3D: true,
               ease: 'power2.out',
               scrollTrigger: {
                 trigger: item,
-                start: 'top 95%',
-                end: 'top 30%',
-                scrub: 1 + (idx % 2) * 0.2,
-                onToggle: (self) => {
-                  item.style.willChange = self.isActive ? 'transform' : 'auto';
-                }
+                start: 'top 92%',
+                end: 'top 35%',
+                scrub: 0.8
               }
             }
           );
@@ -156,31 +144,69 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
           if (photo) {
             gsap.fromTo(
               photo,
-              { scale: 1.14, force3D: true },
+              { scale: 1.08, force3D: true },
               {
                 scale: 1,
                 force3D: true,
                 ease: 'power2.out',
                 scrollTrigger: {
                   trigger: item,
-                  start: 'top 95%',
-                  end: 'bottom 20%',
-                  scrub: 1,
-                  onToggle: (self) => {
-                    photo.style.willChange = self.isActive ? 'transform' : 'auto';
-                  }
+                  start: 'top 92%',
+                  end: 'bottom 25%',
+                  scrub: 0.8
                 }
               }
             );
           }
         });
-      }, this.collectionSection.nativeElement);
+      });
+
+      this.mm.add('(max-width: 767px)', () => {
+        const items = gsap.utils.toArray<HTMLElement>('.collection-item', rootEl);
+        items.forEach((item) => {
+          const photo = item.querySelector<HTMLElement>('.collection-photo');
+          gsap.fromTo(
+            item,
+            { y: 14, force3D: true },
+            {
+              y: 0,
+              force3D: true,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top 94%',
+                end: 'top 45%',
+                scrub: 0.5
+              }
+            }
+          );
+
+          if (photo) {
+            gsap.fromTo(
+              photo,
+              { scale: 1.04, force3D: true },
+              {
+                scale: 1,
+                force3D: true,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: item,
+                  start: 'top 94%',
+                  end: 'bottom 30%',
+                  scrub: 0.5
+                }
+              }
+            );
+          }
+        });
+      });
     });
   }
 
   ngOnDestroy(): void {
     this.ngZone.runOutsideAngular(() => {
-      this.ctx?.revert();
+      this.mm?.revert();
+      this.mm = null;
     });
   }
 }

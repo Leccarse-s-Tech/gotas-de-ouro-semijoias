@@ -12,90 +12,87 @@ gsap.registerPlugin(ScrollTrigger);
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="atelier-filme" #scrubSection class="relative bg-soft-linen border-t border-travertine">
-      <div #scrubScrollTrack class="relative h-[200vh] w-full">
-        <div class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between pt-24 pb-10 sm:pt-28 sm:pb-12 px-4 sm:px-8">
-          <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
+    <section id="atelier-filme" #scrubSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-soft-linen border-t border-travertine">
+      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
-          <div class="relative z-20 max-w-[1400px] w-full mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-2">
-                Matéria &amp; Luz
-              </p>
-              <h2 class="font-editorial text-3xl sm:text-5xl text-onyx-graphite leading-[1.08]">
-                Brilho sutil e <span class="italic font-light leading-[1.1] pb-1 inline-block">movimento delicado.</span>
-              </h2>
-            </div>
-            <div class="flex items-center gap-4">
-              <span class="text-xs text-mineral-taupe">
-                Filme Editorial
-              </span>
-              <div class="w-28 h-[1px] bg-travertine overflow-hidden">
-                <div
-                  #progressBar
-                  class="h-full w-full bg-onyx-graphite origin-left scale-x-0 gpu-animated"
-                ></div>
-              </div>
-            </div>
+      <div class="relative z-10 max-w-7xl mx-auto w-full">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-2">
+              Matéria &amp; Luz
+            </p>
+            <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl leading-tight text-onyx-graphite">
+              Brilho sutil e <span class="italic font-light leading-[1.1] pb-1 inline-block">movimento delicado.</span>
+            </h2>
           </div>
 
-          <div class="relative z-10 my-auto py-4 flex items-center justify-center w-full">
-            <div
-              #scrubArchBox
-              class="relative w-full max-w-[1400px] h-[64vh] sm:h-[68vh] rounded-t-full border border-travertine bg-onyx-graphite overflow-hidden gpu-animated"
+          <div class="flex items-center gap-4">
+            <span class="text-xs text-mineral-taupe">
+              Filme Editorial
+            </span>
+            <div class="w-24 sm:w-28 h-[1px] bg-travertine overflow-hidden">
+              <div
+                #progressBar
+                class="h-full w-full bg-onyx-graphite origin-left scale-x-0 gpu-animated"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          #scrubArchBox
+          class="w-full max-w-5xl mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[16/10] border border-travertine bg-onyx-graphite gpu-animated"
+        >
+          <video
+            #scrubVideo
+            src="assets/editorial/scrub-showcase-video.mp4"
+            poster="assets/editorial/editorial-macro-frame-3.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            disablePictureInPicture
+            class="w-full h-full object-cover gpu-animated"
+          ></video>
+
+          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/65 via-onyx-graphite/15 to-transparent"></div>
+
+          <div class="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center gap-4 text-vanilla-bone gpu-animated">
+            <p class="font-editorial italic max-w-md mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-vanilla-bone">
+              Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
+            </p>
+
+            <a
+              [href]="whatsappUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              appMagneticSpring
+              [magneticStrength]="0.22"
+              class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-travertine shrink-0 gpu-animated"
             >
-              <video
-                #scrubVideo
-                src="assets/editorial/scrub-showcase-video.webm"
-                poster="assets/editorial/editorial-macro-frame-3.webp"
-                preload="metadata"
-                autoplay
-                loop
-                muted
-                playsinline
-                disablePictureInPicture
-                class="w-full h-full object-cover gpu-animated"
-              ></video>
-
-              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/65 via-transparent to-onyx-graphite/15"></div>
-
-              <div class="absolute inset-x-0 bottom-8 sm:bottom-10 px-6 flex flex-col items-center justify-center text-center gap-4 text-vanilla-bone gpu-animated">
-                <p class="font-editorial italic text-xl sm:text-2xl leading-[1.2] max-w-[34ch] text-vanilla-bone">
-                  Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
-                </p>
-
-                <a
-                  [href]="whatsappUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  appMagneticSpring
-                  [magneticStrength]="0.22"
-                  class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-travertine shrink-0 gpu-animated"
-                >
-                  <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
-                    <span>Atendimento Exclusivo</span>
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
-                    </svg>
-                  </span>
-                </a>
-              </div>
-            </div>
+              <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
+                <span>Atendimento Exclusivo</span>
+                <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
+                </svg>
+              </span>
+            </a>
           </div>
+        </div>
 
-          <div class="relative z-20 max-w-[1400px] w-full mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-travertine">
-            <div class="flex items-baseline justify-between sm:justify-start gap-3">
-              <span class="font-editorial italic text-lg text-onyx-graphite">Acabamento Primoroso</span>
-              <span class="text-xs text-mineral-taupe">Seleção cuidadosa em cada detalhe</span>
-            </div>
-            <div class="flex items-baseline justify-between sm:justify-start gap-3">
-              <span class="font-editorial italic text-lg text-onyx-graphite">Consultoria Direta</span>
-              <span class="text-xs text-mineral-taupe">Vídeos reais das peças via WhatsApp</span>
-            </div>
-            <div class="flex items-baseline justify-between sm:justify-start gap-3">
-              <span class="font-editorial italic text-lg text-onyx-graphite">Envio Nacional</span>
-              <span class="text-xs text-mineral-taupe">Atendimento para todo o Brasil</span>
-            </div>
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-center md:text-left mt-8 pt-6 border-t border-travertine">
+          <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5">
+            <span class="font-editorial italic text-lg text-onyx-graphite">Acabamento Primoroso</span>
+            <span class="text-xs text-mineral-taupe">Seleção cuidadosa em cada detalhe</span>
+          </div>
+          <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5">
+            <span class="font-editorial italic text-lg text-onyx-graphite">Consultoria Direta</span>
+            <span class="text-xs text-mineral-taupe">Vídeos reais das peças via WhatsApp</span>
+          </div>
+          <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5">
+            <span class="font-editorial italic text-lg text-onyx-graphite">Envio Nacional</span>
+            <span class="text-xs text-mineral-taupe">Atendimento para todo o Brasil</span>
           </div>
         </div>
       </div>
@@ -104,7 +101,6 @@ gsap.registerPlugin(ScrollTrigger);
 })
 export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
   @ViewChild('scrubSection') scrubSection!: ElementRef<HTMLElement>;
-  @ViewChild('scrubScrollTrack') scrubScrollTrack!: ElementRef<HTMLElement>;
   @ViewChild('scrubArchBox') scrubArchBox!: ElementRef<HTMLElement>;
   @ViewChild('scrubVideo') scrubVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('progressBar') progressBar!: ElementRef<HTMLElement>;
@@ -112,91 +108,83 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
 
   private readonly ngZone = inject(NgZone);
-  private ctx: gsap.Context | null = null;
+  private mm: gsap.MatchMedia | null = null;
   private observer: IntersectionObserver | null = null;
 
   ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
-      const video = this.scrubVideo?.nativeElement;
+      const videoEl = this.scrubVideo?.nativeElement;
       const archBox = this.scrubArchBox?.nativeElement;
-      const trackEl = this.scrubScrollTrack?.nativeElement;
       const barEl = this.progressBar?.nativeElement;
 
-      if (!video || !archBox || !trackEl || !barEl) return;
+      if (!videoEl || !archBox || !barEl) return;
 
-      video.muted = true;
-      video.disablePictureInPicture = true;
+      videoEl.muted = true;
+      videoEl.disablePictureInPicture = true;
 
       this.observer = new IntersectionObserver(
         (entries) => {
-          const entry = entries[0];
-          const isVisible = Boolean(entry?.isIntersecting);
-          if (isVisible) {
-            archBox.style.willChange = 'transform';
-            video.style.willChange = 'transform';
-            barEl.style.willChange = 'transform';
-            video.play().catch(() => {});
-          } else {
-            archBox.style.willChange = 'auto';
-            video.style.willChange = 'auto';
-            barEl.style.willChange = 'auto';
-            video.pause();
-          }
+          entries.forEach((entry) => {
+            const video = entry.target as HTMLVideoElement;
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
         },
-        { rootMargin: '150px 0px' }
+        { threshold: 0.15 }
       );
-      this.observer.observe(trackEl);
+      this.observer.observe(videoEl);
 
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const setBarScale = gsap.quickSetter(barEl, 'scaleX');
+      this.mm = gsap.matchMedia();
 
-      this.ctx = gsap.context(() => {
-        gsap.set(archBox, {
-          scale: 0.75,
-          force3D: true
-        });
-
-        gsap.set(video, {
-          scale: 1.2,
-          force3D: true
-        });
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: trackEl,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 0.8,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              setBarScale(self.progress);
+      this.mm.add('(min-width: 768px)', () => {
+        gsap.fromTo(
+          archBox,
+          { scale: 0.88, force3D: true },
+          {
+            scale: 1,
+            force3D: true,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: archBox,
+              start: 'top 90%',
+              end: 'top 25%',
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                setBarScale(self.progress);
+              }
             }
           }
-        });
+        );
+      });
 
-        tl.to(
+      this.mm.add('(max-width: 767px)', () => {
+        gsap.fromTo(
           archBox,
+          { scale: 0.94, force3D: true },
           {
             scale: 1,
             force3D: true,
             ease: 'power2.out',
-            duration: 1
-          },
-          0
+            scrollTrigger: {
+              trigger: archBox,
+              start: 'top 92%',
+              end: 'top 35%',
+              scrub: 0.5,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                setBarScale(self.progress);
+              }
+            }
+          }
         );
-
-        tl.to(
-          video,
-          {
-            scale: 1,
-            force3D: true,
-            ease: 'power2.out',
-            duration: 1
-          },
-          0
-        );
-      }, this.scrubSection.nativeElement);
+      });
     });
   }
 
@@ -204,16 +192,8 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       this.observer?.disconnect();
       this.observer = null;
-      if (this.scrubArchBox?.nativeElement) {
-        this.scrubArchBox.nativeElement.style.willChange = 'auto';
-      }
-      if (this.scrubVideo?.nativeElement) {
-        this.scrubVideo.nativeElement.style.willChange = 'auto';
-      }
-      if (this.progressBar?.nativeElement) {
-        this.progressBar.nativeElement.style.willChange = 'auto';
-      }
-      this.ctx?.revert();
+      this.mm?.revert();
+      this.mm = null;
     });
   }
 }

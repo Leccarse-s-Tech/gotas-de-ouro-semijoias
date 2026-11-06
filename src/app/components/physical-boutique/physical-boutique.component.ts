@@ -9,31 +9,31 @@ import reviewsData from '../../../assets/data/reviews.json';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="boutique" class="relative py-24 sm:py-36 bg-soft-linen border-t border-travertine overflow-hidden">
+    <section id="boutique" class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-soft-linen border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div class="lg:col-span-5">
+      <div class="relative z-10 max-w-7xl mx-auto w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div class="min-w-0">
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">
               Nossa Boutique Física &amp; Envio Nacional
             </p>
 
-            <h2 class="font-editorial text-4xl sm:text-5xl lg:text-[54px] leading-[1.08] tracking-tight text-onyx-graphite">
+            <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-onyx-graphite">
               Presença física sólida, <span class="italic font-light leading-[1.1] pb-1 inline-block">alcance em todo o Brasil.</span>
             </h2>
 
-            <p class="mt-5 text-sm sm:text-base text-mineral-taupe leading-relaxed">
+            <p class="mt-4 sm:mt-5 text-sm sm:text-base text-mineral-taupe leading-relaxed">
               Além de enviar diariamente para todas as capitais e interior do Brasil através do nosso atendimento digital personalizado, a Gotas de Ouro mantém sua boutique física na Grande São Paulo como ponto de encontro, curadoria presencial e lastro de confiança.
             </p>
 
-            <div class="mt-8 space-y-5 pt-6 border-t border-travertine">
+            <div class="mt-7 sm:mt-8 space-y-5 pt-6 border-t border-travertine">
               <div class="flex items-start gap-3.5">
                 <svg class="w-5 h-5 text-celadon-slate shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-5.686-7-11a7 7 0 1 1 14 0c0 5.314-7 11-7 11Z" />
                   <circle cx="12" cy="10" r="2.5" stroke-width="1.6" />
                 </svg>
-                <div>
+                <div class="min-w-0">
                   <p class="text-xs font-semibold uppercase tracking-[0.12em] text-onyx-graphite">Endereço da Boutique</p>
                   <p class="text-sm text-mineral-taupe mt-1 leading-relaxed">{{ address() }}</p>
                 </div>
@@ -44,7 +44,7 @@ import reviewsData from '../../../assets/data/reviews.json';
                   <circle cx="12" cy="12" r="9" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 2" />
                 </svg>
-                <div>
+                <div class="min-w-0">
                   <p class="text-xs font-semibold uppercase tracking-[0.12em] text-onyx-graphite">Horários de Atendimento Presencial</p>
                   <p *ngFor="let line of openingHours()" class="text-sm text-mineral-taupe mt-1">
                     {{ line }}
@@ -53,18 +53,18 @@ import reviewsData from '../../../assets/data/reviews.json';
               </div>
             </div>
 
-            <div class="mt-9 flex flex-wrap items-center gap-3">
+            <div class="mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <a
                 [href]="mapsUrl()"
                 target="_blank"
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.24"
-                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                   <span>Traçar rota no Google Maps</span>
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
                   </svg>
                 </span>
@@ -76,15 +76,15 @@ import reviewsData from '../../../assets/data/reviews.json';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner whitespace-nowrap">Atendimento Exclusivo</span>
               </a>
             </div>
           </div>
 
-          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-12 gap-6 items-end">
-            <div class="sm:col-span-7 border border-[#D8D3C8] bg-vanilla-bone p-3 rounded-2xl">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-6 items-end w-full min-w-0">
+            <div class="sm:col-span-7 border border-[#D8D3C8] bg-vanilla-bone p-3 rounded-2xl min-w-0">
               <div class="overflow-hidden rounded-xl">
                 <img
                   src="assets/editorial/fachada-editorial-1.webp"
@@ -94,14 +94,14 @@ import reviewsData from '../../../assets/data/reviews.json';
                   decoding="async"
                 />
               </div>
-              <div class="pt-3 px-2 flex items-center justify-between text-xs text-mineral-taupe">
-                <span>Arquitetura &amp; Vitrine Física</span>
-                <span>São Paulo / Guarulhos</span>
+              <div class="pt-3 px-1 flex items-center justify-between gap-2 text-xs text-mineral-taupe">
+                <span class="truncate">Arquitetura &amp; Vitrine Física</span>
+                <span class="shrink-0">São Paulo / Guarulhos</span>
               </div>
             </div>
 
-            <div class="sm:col-span-5 rounded-t-full overflow-hidden border border-[#D8D3C8] bg-vanilla-bone p-3">
-              <div class="overflow-hidden rounded-t-full">
+            <div class="sm:col-span-5 rounded-t-[999px] rounded-b-2xl overflow-hidden border border-[#D8D3C8] bg-vanilla-bone p-3 min-w-0">
+              <div class="overflow-hidden rounded-t-[999px] rounded-b-xl">
                 <img
                   src="assets/editorial/fachada-editorial-2.webp"
                   alt="Entrada da boutique fisica Gotas de Ouro"
@@ -110,9 +110,9 @@ import reviewsData from '../../../assets/data/reviews.json';
                   decoding="async"
                 />
               </div>
-              <div class="pt-3 px-2 flex items-center justify-between text-xs text-mineral-taupe">
-                <span>Curadoria Presencial</span>
-                <span>Loja 14</span>
+              <div class="pt-3 px-1 flex items-center justify-between gap-2 text-xs text-mineral-taupe">
+                <span class="truncate">Curadoria Presencial</span>
+                <span class="shrink-0">Loja 14</span>
               </div>
             </div>
           </div>

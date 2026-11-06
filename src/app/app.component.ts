@@ -32,7 +32,7 @@ import { ScrollPhysicsService } from './services/scroll-physics.service';
 
     <app-navbar></app-navbar>
 
-    <main class="relative z-10">
+    <main class="relative z-10 w-full max-w-full overflow-x-clip">
       <app-hero-editorial></app-hero-editorial>
       <app-manifesto-tactile></app-manifesto-tactile>
       <app-curated-collection></app-curated-collection>

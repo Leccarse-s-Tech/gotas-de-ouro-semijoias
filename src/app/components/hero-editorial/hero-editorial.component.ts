@@ -13,36 +13,36 @@ gsap.registerPlugin(ScrollTrigger);
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="topo" #heroSection class="relative bg-vanilla-bone">
+    <section id="topo" #heroSection class="relative w-full max-w-full overflow-hidden pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6 lg:px-12 bg-vanilla-bone">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8 pt-24 pb-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-          <div class="lg:col-span-8">
-            <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-4">
+      <div class="relative z-10 max-w-7xl mx-auto w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end mb-10 sm:mb-14">
+          <div class="lg:col-span-7 min-w-0">
+            <p class="text-[11px] uppercase tracking-[0.22em] text-mineral-taupe mb-3 sm:mb-4">
               Alta Curadoria em Semijoias - Envio para todo o Brasil
             </p>
-            <h1 class="font-editorial text-5xl sm:text-6xl lg:text-[76px] leading-[1.04] tracking-tight text-onyx-graphite font-normal">
+            <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl xl:text-[68px] leading-[1.06] tracking-tight text-onyx-graphite font-normal">
               A poesia da matéria em <span class="italic font-light leading-[1.1] pb-1 inline-block">formas eternas.</span>
             </h1>
           </div>
 
-          <div class="lg:col-span-4 flex flex-col items-start lg:items-end justify-end gap-5">
-            <p class="text-sm sm:text-[15px] text-mineral-taupe leading-relaxed max-w-[38ch] lg:text-right">
+          <div class="lg:col-span-5 flex flex-col items-start lg:items-end justify-end gap-5 min-w-0">
+            <p class="text-sm sm:text-base text-mineral-taupe leading-relaxed max-w-[40ch] lg:text-right">
               Peças selecionadas para iluminar a pele com delicadeza e atendimento individualizado para todo o país.
             </p>
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
               <a
                 [href]="whatsappUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.28"
-                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2.5 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
                   </svg>
                 </span>
@@ -53,44 +53,40 @@ gsap.registerPlugin(ScrollTrigger);
                 (click)="scrollToCollections($event)"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-soft-linen text-onyx-graphite text-[13px] font-medium hover:border-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner whitespace-nowrap">Explorar Acervo</span>
               </a>
             </div>
           </div>
         </div>
-      </div>
 
-      <div #archScrollTrack class="relative h-[200vh] w-full">
-        <div class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center px-4 sm:px-8 pt-20 pb-6">
+        <div
+          #archContainer
+          class="w-full max-w-5xl mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[16/10] border border-travertine bg-travertine/40 gpu-animated"
+        >
+          <video
+            #heroVideo
+            src="assets/editorial/hero-arch-video.mp4"
+            poster="assets/editorial/editorial-macro-frame-2.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            disablePictureInPicture
+            class="w-full h-full object-cover gpu-animated"
+          ></video>
+
+          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/60 via-onyx-graphite/15 to-transparent"></div>
+
           <div
-            #archContainer
-            class="relative w-full max-w-[1400px] h-[80vh] sm:h-[84vh] rounded-t-full border border-travertine bg-travertine/40 overflow-hidden gpu-animated"
+            #archOverlayText
+            class="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center text-vanilla-bone gpu-animated"
           >
-            <video
-              #heroVideo
-              src="assets/editorial/hero-arch-video.webm"
-              poster="assets/editorial/editorial-macro-frame-2.webp"
-              preload="metadata"
-              autoplay
-              muted
-              loop
-              playsinline
-              disablePictureInPicture
-              class="w-full h-full object-cover gpu-animated"
-            ></video>
-
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/55 via-transparent to-transparent"></div>
-
-            <div
-              #archOverlayText
-              class="absolute inset-x-0 bottom-8 sm:bottom-12 px-6 flex flex-col items-center justify-center text-center text-vanilla-bone gpu-animated"
-            >
-              <p class="font-editorial italic text-xl sm:text-2xl leading-[1.2] max-w-[38ch] text-vanilla-bone">
-                Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
-              </p>
-            </div>
+            <p class="font-editorial italic max-w-md mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-vanilla-bone">
+              Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
+            </p>
           </div>
         </div>
       </div>
@@ -99,7 +95,6 @@ gsap.registerPlugin(ScrollTrigger);
 })
 export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
   @ViewChild('heroSection') heroSection!: ElementRef<HTMLElement>;
-  @ViewChild('archScrollTrack') archScrollTrack!: ElementRef<HTMLElement>;
   @ViewChild('archContainer') archContainer!: ElementRef<HTMLElement>;
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('archOverlayText') archOverlayText!: ElementRef<HTMLElement>;
@@ -107,7 +102,7 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
   private readonly scrollService = inject(ScrollPhysicsService);
   private readonly ngZone = inject(NgZone);
-  private ctx: gsap.Context | null = null;
+  private mm: gsap.MatchMedia | null = null;
   private observer: IntersectionObserver | null = null;
 
   scrollToCollections(event: Event): void {
@@ -119,84 +114,86 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       const videoEl = this.heroVideo?.nativeElement;
       const arch = this.archContainer?.nativeElement;
-      const track = this.archScrollTrack?.nativeElement;
       const overlay = this.archOverlayText?.nativeElement;
 
-      if (!videoEl || !arch || !track || !overlay) return;
+      if (!videoEl || !arch || !overlay) return;
 
       videoEl.muted = true;
       videoEl.disablePictureInPicture = true;
 
       this.observer = new IntersectionObserver(
         (entries) => {
-          const entry = entries[0];
-          const isVisible = Boolean(entry?.isIntersecting);
-          if (isVisible) {
-            arch.style.willChange = 'transform';
-            videoEl.style.willChange = 'transform';
-            videoEl.play().catch(() => {});
-          } else {
-            arch.style.willChange = 'auto';
-            videoEl.style.willChange = 'auto';
-            videoEl.pause();
-          }
+          entries.forEach((entry) => {
+            const video = entry.target as HTMLVideoElement;
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
         },
-        { rootMargin: '150px 0px' }
+        { threshold: 0.15 }
       );
-      this.observer.observe(track);
+      this.observer.observe(videoEl);
 
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      this.ctx = gsap.context(() => {
-        gsap.set(arch, {
-          scale: 0.75,
-          force3D: true
-        });
+      this.mm = gsap.matchMedia();
 
-        gsap.set(videoEl, {
-          scale: 1.2,
-          force3D: true
-        });
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: track,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 0.8,
-            invalidateOnRefresh: true
-          }
-        });
-
-        tl.to(
+      this.mm.add('(min-width: 768px)', () => {
+        gsap.fromTo(
           arch,
+          { scale: 0.88, force3D: true },
           {
             scale: 1,
             force3D: true,
             ease: 'power2.out',
-            duration: 1
-          },
-          0
+            scrollTrigger: {
+              trigger: arch,
+              start: 'top 88%',
+              end: 'top 20%',
+              scrub: 0.6,
+              invalidateOnRefresh: true
+            }
+          }
         );
 
-        tl.to(
-          videoEl,
-          {
-            scale: 1,
-            force3D: true,
-            ease: 'power2.out',
-            duration: 1
-          },
-          0
-        );
-
-        tl.fromTo(
+        gsap.fromTo(
           overlay,
-          { yPercent: 18, opacity: 0.72, force3D: true },
-          { yPercent: 0, opacity: 1, force3D: true, ease: 'power2.out', duration: 0.8 },
-          0.1
+          { y: 18, opacity: 0.85, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            force3D: true,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: arch,
+              start: 'top 85%',
+              end: 'top 25%',
+              scrub: 0.6
+            }
+          }
         );
-      }, this.heroSection.nativeElement);
+      });
+
+      this.mm.add('(max-width: 767px)', () => {
+        gsap.fromTo(
+          arch,
+          { scale: 0.94, force3D: true },
+          {
+            scale: 1,
+            force3D: true,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: arch,
+              start: 'top 92%',
+              end: 'top 30%',
+              scrub: 0.5,
+              invalidateOnRefresh: true
+            }
+          }
+        );
+      });
     });
   }
 
@@ -204,13 +201,8 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       this.observer?.disconnect();
       this.observer = null;
-      if (this.archContainer?.nativeElement) {
-        this.archContainer.nativeElement.style.willChange = 'auto';
-      }
-      if (this.heroVideo?.nativeElement) {
-        this.heroVideo.nativeElement.style.willChange = 'auto';
-      }
-      this.ctx?.revert();
+      this.mm?.revert();
+      this.mm = null;
     });
   }
 }

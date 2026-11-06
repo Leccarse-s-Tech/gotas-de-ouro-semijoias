@@ -10,9 +10,11 @@ const OUT_DIR = path.join(__dirname, '..', 'src', 'assets', 'editorial');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 function getFfmpegExecutable() {
-  const localApp = process.env.LOCALAPPDATA || '';
-  const candidate = path.join(localApp, 'ms-playwright', 'ffmpeg-1011', 'ffmpeg-win64.exe');
-  return fs.existsSync(candidate) ? candidate : 'ffmpeg';
+  try {
+    return require('ffmpeg-static');
+  } catch {
+    return 'ffmpeg';
+  }
 }
 
 function createCleanLogoSvgs() {
@@ -102,20 +104,19 @@ async function generateWithGenAI({ refFile, outName, prompt, width = 1280, heigh
   return false;
 }
 
-async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationSec = 5 }) {
+async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationSec = 6 }) {
   const ffmpeg = getFfmpegExecutable();
-  const outWebm = path.join(OUT_DIR, `${outputBaseName}.webm`);
   const outMp4 = path.join(OUT_DIR, `${outputBaseName}.mp4`);
-  if (fs.existsSync(outWebm) && fs.existsSync(outMp4)) {
+  if (fs.existsSync(outMp4)) {
     return;
   }
 
   const fps = 30;
   const totalFrames = durationSec * fps;
   const outW = 1280;
-  const outH = 720;
+  const outH = 800;
   const canvasW = 1600;
-  const canvasH = 900;
+  const canvasH = 1000;
 
   const preparedBuffers = [];
   for (const imgName of sourceImages) {
@@ -132,11 +133,14 @@ async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationS
       '-c:v', 'mjpeg',
       '-r', String(fps),
       '-i', 'pipe:0',
-      '-c:v', 'libvpx',
-      '-b:v', '4500k',
-      '-g', '1',
+      '-c:v', 'libx264',
+      '-crf', '20',
+      '-preset', 'slow',
+      '-vf', 'scale=1280:-2',
+      '-pix_fmt', 'yuv420p',
+      '-movflags', '+faststart',
       '-an',
-      outWebm
+      outMp4
     ]);
 
     let errLog = '';
@@ -156,13 +160,13 @@ async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationS
         const localT = segFloat - segIdx;
 
         const baseBuf = preparedBuffers[segIdx];
-        const zoom = 1.0 + 0.14 * Math.sin(localT * Math.PI * 0.5);
+        const zoom = 1.0 + 0.1 * Math.sin(localT * Math.PI * 0.5);
         const cropW = Math.round(outW / zoom);
         const cropH = Math.round(outH / zoom);
         const maxLeft = canvasW - cropW;
         const maxTop = canvasH - cropH;
-        const panX = Math.round((maxLeft / 2) + (maxLeft * 0.35) * Math.sin(progress * Math.PI * 2));
-        const panY = Math.round((maxTop / 2) + (maxTop * 0.25) * Math.cos(progress * Math.PI));
+        const panX = Math.round((maxLeft / 2) + (maxLeft * 0.25) * Math.sin(progress * Math.PI * 2));
+        const panY = Math.round((maxTop / 2) + (maxTop * 0.2) * Math.cos(progress * Math.PI));
 
         const left = Math.max(0, Math.min(maxLeft, panX));
         const top = Math.max(0, Math.min(maxTop, panY));
@@ -182,7 +186,7 @@ async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationS
           pipeline = pipeline.composite([{ input: nextCrop, blend: 'over' }]);
         }
 
-        const frameJpeg = await pipeline.jpeg({ quality: 88 }).toBuffer();
+        const frameJpeg = await pipeline.jpeg({ quality: 92 }).toBuffer();
         const canContinue = proc.stdin.write(frameJpeg);
         if (!canContinue) {
           await new Promise(r => proc.stdin.once('drain', r));
@@ -191,8 +195,6 @@ async function generateSlowMotionVideo({ sourceImages, outputBaseName, durationS
       proc.stdin.end();
     })().catch(reject);
   });
-
-  fs.copyFileSync(outWebm, outMp4);
 }
 
 async function run() {
@@ -241,12 +243,6 @@ async function run() {
     sourceImages: ['editorial-macro-frame-3.jpg', 'joia-2-editorial.jpg', 'joia-4-editorial.jpg'],
     outputBaseName: 'scrub-showcase-video',
     durationSec: 6
-  });
-
-  await generateSlowMotionVideo({
-    sourceImages: ['joia-4-editorial.jpg', 'editorial-macro-frame-2.jpg'],
-    outputBaseName: 'linen-macro-video',
-    durationSec: 5
   });
 }
 

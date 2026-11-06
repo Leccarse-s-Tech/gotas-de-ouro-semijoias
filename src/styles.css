@@ -11,11 +11,15 @@
   --onyx-graphite: #1E1E1C;
 }
 
+html, body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 body {
   background-color: #F3F2D9;
   color: #1E1E1C;
   font-family: 'Manrope', sans-serif;
-  overflow-x: clip;
 }
 
 .font-editorial {
@@ -39,7 +43,7 @@ body {
 }
 
 .arch-mask-frame {
-  border-radius: 9999px 9999px 0 0;
+  border-radius: 999px 999px 16px 16px;
   overflow: hidden;
   backface-visibility: hidden;
   transform: translateZ(0);

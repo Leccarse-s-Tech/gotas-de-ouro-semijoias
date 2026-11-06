@@ -105,10 +105,14 @@ function auditCodebase() {
   }
 
   const editorialDir = path.join(__dirname, '..', 'src', 'assets', 'editorial');
+  let videoFileCount = 0;
   for (const f of fs.readdirSync(editorialDir)) {
     const ext = path.extname(f).toLowerCase();
     if (ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
       violations.push(`Imagem nao convertida para WebP: ${f}`);
+    }
+    if (ext === '.mp4' || ext === '.webm') {
+      videoFileCount++;
     }
     if (ext === '.webp') {
       const sizeKb = fs.statSync(path.join(editorialDir, f)).size / 1024;
@@ -118,10 +122,15 @@ function auditCodebase() {
     }
   }
 
+  if (videoFileCount > 2) {
+    violations.push(`Mais de 2 arquivos de video na pasta editorial (${videoFileCount})`);
+  }
+
   console.log('Arquivos auditados:', allFiles.length);
   console.log('Violacoes de codigo encontradas:', violations.length);
   if (violations.length > 0) {
-    console.log(violations.join('\n'));
+    console.error(violations.join('\n'));
+    process.exit(1);
   }
 }
 
@@ -131,120 +140,105 @@ async function validateBrowser() {
     executablePath: getBrowserExecutable()
   });
 
-  const desktopPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-  const consoleErrors = [];
-  desktopPage.on('pageerror', err => consoleErrors.push(err.message));
+  const viewportsToTest = [
+    { name: 'mobile-small-375', width: 375, height: 812, isMobile: true },
+    { name: 'mobile-large-425', width: 425, height: 844, isMobile: true },
+    { name: 'tablet-768', width: 768, height: 1024, isMobile: false },
+    { name: 'tablet-820', width: 820, height: 1180, isMobile: false },
+    { name: 'desktop-1280', width: 1280, height: 800, isMobile: false },
+    { name: 'desktop-1920', width: 1920, height: 1080, isMobile: false }
+  ];
 
-  await desktopPage.goto('http://localhost:4200', { waitUntil: 'networkidle', timeout: 30000 });
-  await desktopPage.waitForTimeout(1500);
+  let desktopTotalBytes = 0;
+  let status206Count = 0;
 
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-hero.jpg'), quality: 90 });
+  for (const vp of viewportsToTest) {
+    const page = await browser.newPage({
+      viewport: { width: vp.width, height: vp.height },
+      isMobile: vp.isMobile,
+      hasTouch: vp.isMobile
+    });
 
-  await desktopPage.evaluate(() => window.scrollTo(0, 950));
-  await desktopPage.waitForTimeout(700);
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-arch-expanded.jpg'), quality: 90 });
+    const consoleErrors = [];
+    page.on('pageerror', err => consoleErrors.push(err.message));
 
-  await desktopPage.evaluate(() => document.querySelector('#manifesto')?.scrollIntoView());
-  await desktopPage.waitForTimeout(700);
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-manifesto.jpg'), quality: 90 });
+    if (vp.name === 'desktop-1920') {
+      page.on('response', res => {
+        if (res.status() === 206) {
+          status206Count++;
+        }
+        const len = res.headers()['content-length'];
+        if (len) {
+          desktopTotalBytes += parseInt(len, 10);
+        }
+      });
+    }
 
-  await desktopPage.evaluate(() => {
-    const el = document.querySelector('#colecoes');
-    if (el) window.scrollTo(0, el.offsetTop + 320);
-  });
-  await desktopPage.waitForTimeout(700);
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-collections.jpg'), quality: 90 });
+    await page.goto('http://localhost:4200', { waitUntil: 'networkidle', timeout: 30000 });
+    await page.waitForTimeout(1000);
 
-  await desktopPage.evaluate(() => {
-    const el = document.querySelector('#atelier-filme');
-    if (el) window.scrollTo(0, el.offsetTop + 450);
-  });
-  await desktopPage.waitForTimeout(700);
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-scrub.jpg'), quality: 90 });
+    const initialOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
 
-  await desktopPage.evaluate(() => document.querySelector('#avaliacoes')?.scrollIntoView());
-  await desktopPage.waitForTimeout(700);
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-reviews.jpg'), quality: 90 });
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
+    await page.waitForTimeout(500);
 
-  await desktopPage.evaluate(() => document.querySelector('#boutique')?.scrollIntoView());
-  await desktopPage.waitForTimeout(700);
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-boutique.jpg'), quality: 90 });
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(600);
 
-  await desktopPage.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await desktopPage.waitForTimeout(700);
-  await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-instagram.jpg'), quality: 90 });
+    const fullScrollOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
 
-  const desktopAudit = await desktopPage.evaluate(() => {
-    const imgs = Array.from(document.querySelectorAll('img'));
-    const brokenImgs = imgs.filter(img => !img.complete || img.naturalWidth === 0).map(img => img.src);
-    const bodyText = document.body.innerText;
-    const forbiddenCopyTerms = [
-      'luz natural',
-      'algodão prensado',
-      'relevo seco',
-      'pedra travertino',
-      'metal nobre',
-      'acabamento nobre',
-      'moissanite',
-      'madrepérola',
-      'mariana costa lima',
-      'letícia barros',
-      'bianca nogueira',
-      'tatiane ribeiro',
-      'meses atrás',
-      'semanas atrás',
-      'local guide'
-    ];
-    const detectedForbiddenCopy = forbiddenCopyTerms.filter(term =>
-      bodyText.toLowerCase().includes(term.toLowerCase())
-    );
+    const checkDom = await page.evaluate(() => {
+      const vids = document.querySelectorAll('video');
+      const cards = document.querySelectorAll('.collection-item');
+      const cardRects = Array.from(cards).map(c => {
+        const r = c.getBoundingClientRect();
+        return { width: r.width, right: r.right };
+      });
+      const clientW = document.documentElement.clientWidth;
+      const cardsOutOfBounds = cardRects.filter(r => r.right > clientW + 1);
+      return {
+        videoCount: vids.length,
+        cardCount: cards.length,
+        clientW,
+        cardsOutOfBounds: cardsOutOfBounds.length
+      };
+    });
 
-    const reviewCards = Array.from(document.querySelectorAll('#avaliacoes article'));
+    await page.screenshot({
+      path: path.join(SCRATCH_DIR, `${vp.name}-full.jpg`),
+      fullPage: false,
+      quality: 85
+    });
 
-    return {
-      title: document.title,
-      imageCount: imgs.length,
-      brokenImgs,
-      videoCount: document.querySelectorAll('video').length,
-      reviewCardCountInDom: reviewCards.length,
-      hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-      containsBonsucessoVisible: /bonsucesso/i.test(bodyText),
-      containsForbiddenCartWords: /\b(carrinho|adicionar ao carrinho|parcelamento|sem juros)\b/i.test(bodyText),
-      detectedForbiddenCopy
-    };
-  });
+    console.log(`Viewport ${vp.name} (${vp.width}x${vp.height}):`);
+    console.log(`  - Overflow inicial: ${initialOverflow ? 'FALHA' : 'OK'}`);
+    console.log(`  - Overflow apos scroll completo: ${fullScrollOverflow ? 'FALHA' : 'OK'}`);
+    console.log(`  - Cards fora da borda direita: ${checkDom.cardsOutOfBounds}`);
+    console.log(`  - Videos na DOM: ${checkDom.videoCount}`);
+    console.log(`  - Erros de console: ${consoleErrors.length}`);
 
-  console.log('Auditoria Desktop (1440x900):', JSON.stringify(desktopAudit, null, 2));
+    if (initialOverflow || fullScrollOverflow || checkDom.cardsOutOfBounds > 0 || consoleErrors.length > 0) {
+      throw new Error(`Falha de validacao no viewport ${vp.name}`);
+    }
 
-  const mobilePage = await browser.newPage({
-    viewport: { width: 390, height: 844 },
-    isMobile: true,
-    hasTouch: true
-  });
-  await mobilePage.goto('http://localhost:4200', { waitUntil: 'networkidle', timeout: 30000 });
-  await mobilePage.waitForTimeout(1200);
-  await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-hero.jpg'), quality: 90 });
+    if (checkDom.videoCount > 2) {
+      throw new Error(`Mais de 2 tags <video> na DOM (${checkDom.videoCount})`);
+    }
 
-  await mobilePage.evaluate(() => document.querySelector('#manifesto')?.scrollIntoView());
-  await mobilePage.waitForTimeout(700);
-  await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-manifesto.jpg'), quality: 90 });
+    await page.close();
+  }
 
-  await mobilePage.evaluate(() => document.querySelector('#colecoes')?.scrollIntoView());
-  await mobilePage.waitForTimeout(700);
-  await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-collections.jpg'), quality: 90 });
+  const desktopMb = (desktopTotalBytes / (1024 * 1024)).toFixed(2);
+  console.log(`Total transferido no Desktop (1920x1080): ${desktopMb} MB`);
+  console.log(`Total de requisicoes 206 Partial Content: ${status206Count}`);
 
-  await mobilePage.evaluate(() => document.querySelector('#avaliacoes')?.scrollIntoView());
-  await mobilePage.waitForTimeout(700);
-  await mobilePage.screenshot({ path: path.join(SCRATCH_DIR, 'mobile-reviews.jpg'), quality: 90 });
-
-  const mobileAudit = await mobilePage.evaluate(() => ({
-    hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-    clientWidth: document.documentElement.clientWidth,
-    scrollWidth: document.documentElement.scrollWidth
-  }));
-
-  console.log('Auditoria Mobile (390x844):', JSON.stringify(mobileAudit, null, 2));
-  console.log('Erros de console:', consoleErrors.length);
+  if (desktopTotalBytes > 6 * 1024 * 1024) {
+    throw new Error(`Transferencia de rede excedeu 6MB: ${desktopMb} MB`);
+  }
 
   await browser.close();
 }
@@ -252,9 +246,10 @@ async function validateBrowser() {
 async function main() {
   auditCodebase();
   await validateBrowser();
+  console.log('Validacao completa executada com sucesso.');
 }
 
 main().catch(err => {
-  console.error('Erro na validacao:', err);
+  console.error(err);
   process.exit(1);
 });
