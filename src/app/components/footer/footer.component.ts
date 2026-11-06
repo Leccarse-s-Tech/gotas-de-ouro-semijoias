@@ -10,7 +10,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <footer class="relative bg-soft-linen border-t border-travertine pt-16 pb-12 overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.14]"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-14 border-b border-travertine">
@@ -31,27 +31,27 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-onyx-graphite mb-4">Navegação</p>
             <ul class="space-y-2.5 text-sm text-mineral-taupe">
               <li>
-                <a href="#manifesto" (click)="navigate($event, '#manifesto')" class="hover:text-onyx-graphite transition-colors">
+                <a href="#manifesto" (click)="navigate($event, '#manifesto')" class="hover:text-onyx-graphite">
                   Essência &amp; Curadoria
                 </a>
               </li>
               <li>
-                <a href="#colecoes" (click)="navigate($event, '#colecoes')" class="hover:text-onyx-graphite transition-colors">
+                <a href="#colecoes" (click)="navigate($event, '#colecoes')" class="hover:text-onyx-graphite">
                   Acervo Autoral
                 </a>
               </li>
               <li>
-                <a href="#atelier-filme" (click)="navigate($event, '#atelier-filme')" class="hover:text-onyx-graphite transition-colors">
+                <a href="#atelier-filme" (click)="navigate($event, '#atelier-filme')" class="hover:text-onyx-graphite">
                   Matéria &amp; Luz
                 </a>
               </li>
               <li>
-                <a href="#avaliacoes" (click)="navigate($event, '#avaliacoes')" class="hover:text-onyx-graphite transition-colors">
+                <a href="#avaliacoes" (click)="navigate($event, '#avaliacoes')" class="hover:text-onyx-graphite">
                   Avaliações no Google
                 </a>
               </li>
               <li>
-                <a href="#boutique" (click)="navigate($event, '#boutique')" class="hover:text-onyx-graphite transition-colors">
+                <a href="#boutique" (click)="navigate($event, '#boutique')" class="hover:text-onyx-graphite">
                   Nossa Boutique Física
                 </a>
               </li>
@@ -70,7 +70,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.22"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs font-medium tracking-[0.03em] hover:bg-celadon-slate transition-colors"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs font-medium tracking-[0.03em] hover:bg-celadon-slate"
               >
                 <span class="magnetic-inner whitespace-nowrap">Atendimento Exclusivo</span>
               </a>
@@ -81,7 +81,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs font-medium hover:border-celadon-slate transition-colors"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs font-medium hover:border-celadon-slate"
               >
                 <span class="magnetic-inner whitespace-nowrap">Instagram Oficial</span>
               </a>
@@ -103,7 +103,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
       appMagneticSpring
       [magneticStrength]="0.32"
       aria-label="Atendimento Exclusivo via WhatsApp"
-      class="fixed bottom-6 right-6 z-40 inline-flex items-center gap-3 px-5 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-travertine/30 shadow-[0_14px_34px_rgba(30,30,28,0.22)] hover:bg-celadon-slate transition-colors duration-300"
+      class="fixed bottom-6 right-6 z-40 inline-flex items-center gap-3 px-5 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8] hover:bg-celadon-slate"
     >
       <span class="magnetic-inner inline-flex items-center gap-2.5">
         <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">

@@ -16,10 +16,10 @@ export interface VerifiedReview {
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section id="avaliacoes" class="relative py-24 sm:py-36 bg-vanilla-bone border-t border-travertine overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.14]"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8 mb-14 sm:mb-20">
-        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 elastic-scroll-target">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           <div>
             <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-soft-linen border border-travertine mb-6">
               <div class="flex items-center gap-1 text-onyx-graphite">
@@ -44,7 +44,7 @@ export interface VerifiedReview {
               rel="noopener noreferrer"
               appMagneticSpring
               [magneticStrength]="0.22"
-              class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone transition-colors duration-300"
+              class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone"
             >
               <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                 <span>Conferir todas as avaliações no Google</span>
@@ -61,7 +61,7 @@ export interface VerifiedReview {
         <div class="animate-marquee-left gap-6 px-3">
           <article
             *ngFor="let rev of marqueeReviews()"
-            class="w-[340px] sm:w-[420px] shrink-0 rounded-2xl bg-soft-linen border border-travertine p-6 sm:p-7 flex flex-col justify-between gap-6 shadow-[0_8px_28px_rgba(30,30,28,0.03)]"
+            class="w-[340px] sm:w-[420px] shrink-0 rounded-2xl bg-soft-linen border border-[#D8D3C8] p-6 sm:p-7 flex flex-col justify-between gap-6"
           >
             <div class="flex flex-col gap-4">
               <div class="flex items-center gap-1 text-onyx-graphite" aria-label="5 estrelas">
@@ -75,7 +75,7 @@ export interface VerifiedReview {
               </p>
             </div>
 
-            <div class="pt-4 border-t border-travertine/70">
+            <div class="pt-4 border-t border-[#D8D3C8]/70">
               <p class="text-xs font-semibold text-onyx-graphite tracking-[0.02em]">{{ rev.author }}</p>
             </div>
           </article>

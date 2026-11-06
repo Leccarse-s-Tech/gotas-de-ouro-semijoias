@@ -9,10 +9,10 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section class="relative py-24 sm:py-32 bg-vanilla-bone border-t border-travertine overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.14]"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 elastic-scroll-target">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
           <div>
             <h2 class="font-editorial text-4xl sm:text-5xl text-onyx-graphite leading-[1.08]">
               Diário visual &amp; <span class="italic font-light leading-[1.1] pb-1 inline-block">novas criações.</span>
@@ -28,7 +28,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
             rel="noopener noreferrer"
             appMagneticSpring
             [magneticStrength]="0.24"
-            class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone transition-colors duration-300 self-start md:self-auto"
+            class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone self-start md:self-auto"
           >
             <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -49,24 +49,25 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
             [href]="instagramReelUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="lg:col-span-5 group relative arch-mask-frame border border-travertine bg-soft-linen p-3 flex flex-col justify-between"
+            class="lg:col-span-5 group relative arch-mask-frame border border-[#D8D3C8] bg-soft-linen p-3 flex flex-col justify-between"
           >
-            <div class="relative overflow-hidden rounded-t-[999px] aspect-[4/5] bg-onyx-graphite">
+            <div class="relative overflow-hidden rounded-t-[500px] aspect-[4/5] bg-onyx-graphite">
               <video
                 #linenVideo
                 src="assets/editorial/linen-macro-video.webm"
                 poster="assets/editorial/joia-4-editorial.jpg"
                 preload="metadata"
+                autoplay
                 muted
                 loop
                 playsinline
                 disablePictureInPicture
-                class="w-full h-full object-cover transition-transform duration-700 ease-spring group-hover:scale-105"
+                class="w-full h-full object-cover"
               ></video>
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/50 via-transparent to-transparent"></div>
               <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-vanilla-bone text-xs">
                 <span class="font-editorial italic text-lg">Discreta no trabalho, impecável nos detalhes</span>
-                <span class="px-3 py-1 rounded-full bg-onyx-graphite/75 border border-travertine/40">Reel Oficial</span>
+                <span class="px-3 py-1 rounded-full bg-onyx-graphite border border-[#D8D3C8]/40">Reel Oficial</span>
               </div>
             </div>
             <div class="pt-3 px-2 flex items-center justify-between text-xs text-mineral-taupe">
@@ -80,13 +81,13 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
               [href]="instagramProfileUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between"
+              class="group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between"
             >
               <div class="overflow-hidden rounded-xl aspect-[16/11]">
                 <img
                   src="assets/editorial/editorial-macro-frame-2.jpg"
                   alt="Composição delicada de semijoias Gotas de Ouro"
-                  class="w-full h-full object-cover transition-transform duration-700 ease-spring group-hover:scale-105"
+                  class="w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"
                 />
@@ -101,13 +102,13 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
               [href]="instagramProfileUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between"
+              class="group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between"
             >
               <div class="overflow-hidden rounded-xl aspect-[16/11]">
                 <img
                   src="assets/editorial/editorial-macro-frame-3.jpg"
                   alt="Detalhe de semijoia selecionada Gotas de Ouro"
-                  class="w-full h-full object-cover transition-transform duration-700 ease-spring group-hover:scale-105"
+                  class="w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"
                 />
@@ -118,7 +119,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
               </div>
             </a>
 
-            <div class="sm:col-span-2 border border-travertine bg-soft-linen p-6 sm:p-8 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div class="sm:col-span-2 border border-[#D8D3C8] bg-soft-linen p-6 sm:p-8 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div>
                 <p class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">
                   Deseja receber vídeos personalizados de uma peça?
@@ -133,7 +134,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.25"
-                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate transition-colors shrink-0 self-start sm:self-auto"
+                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate shrink-0 self-start sm:self-auto"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>

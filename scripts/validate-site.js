@@ -67,6 +67,21 @@ function auditCodebase() {
     if (rel.endsWith('.component.ts') && !content.includes('ChangeDetectionStrategy.OnPush')) {
       violations.push(`Componente sem OnPush: ${rel}`);
     }
+
+    if (rel.endsWith('.component.ts')) {
+      if (/\b(transition-all|transition-transform|duration-\d+|ease-spring)\b/.test(content)) {
+        violations.push(`Conflito Tailwind transition/duration detectado em: ${rel}`);
+      }
+      if (/\.currentTime\s*=/.test(content)) {
+        violations.push(`Mutacao de video.currentTime no scroll detectada em: ${rel}`);
+      }
+      if (/\b(mix-blend-multiply|backdrop-blur|shadow-2xl|drop-shadow)\b/.test(content)) {
+        violations.push(`Filtro pesado (mix-blend/backdrop-blur/shadow) detectado em: ${rel}`);
+      }
+      if (/\(mousemove\)|\(scroll\)/.test(content)) {
+        violations.push(`Listener de alta frequencia no template Angular em: ${rel}`);
+      }
+    }
   }
 
   const editorialDir = path.join(__dirname, '..', 'src', 'assets', 'editorial');

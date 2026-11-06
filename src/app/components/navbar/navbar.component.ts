@@ -10,8 +10,8 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <header
-      class="fixed top-0 left-0 right-0 z-40 transition-all duration-500 border-b"
-      [ngClass]="scrollService.isScrolled() ? 'bg-vanilla-bone/90 backdrop-blur-md border-travertine py-3' : 'bg-vanilla-bone/70 backdrop-blur-sm border-travertine/50 py-4'"
+      class="fixed top-0 left-0 right-0 z-40 border-b"
+      [ngClass]="scrollService.isScrolled() ? 'bg-vanilla-bone border-travertine py-3' : 'bg-vanilla-bone/95 border-travertine/60 py-4'"
     >
       <div class="max-w-[1400px] mx-auto px-4 sm:px-8 h-12 flex items-center justify-between gap-4">
         <a
@@ -23,7 +23,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
           <img
             src="assets/editorial/logo-symbol.svg"
             alt="Simbolo Gotas de Ouro"
-            class="w-7 h-5 sm:w-9 sm:h-7 object-contain transition-transform duration-500 ease-spring group-hover:scale-105 shrink-0"
+            class="w-7 h-5 sm:w-9 sm:h-7 object-contain shrink-0"
           />
           <div class="flex flex-col">
             <span class="font-editorial italic text-xl sm:text-[26px] leading-none tracking-tight text-onyx-graphite whitespace-nowrap">
@@ -40,35 +40,35 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
             <a
               href="#manifesto"
               (click)="navigate($event, '#manifesto')"
-              class="hover:text-celadon-slate transition-colors py-1"
+              class="hover:text-celadon-slate py-1"
             >
               Essência &amp; Curadoria
             </a>
             <a
               href="#colecoes"
               (click)="navigate($event, '#colecoes')"
-              class="hover:text-celadon-slate transition-colors py-1"
+              class="hover:text-celadon-slate py-1"
             >
               Acervo Autoral
             </a>
             <a
               href="#atelier-filme"
               (click)="navigate($event, '#atelier-filme')"
-              class="hover:text-celadon-slate transition-colors py-1"
+              class="hover:text-celadon-slate py-1"
             >
               Matéria &amp; Luz
             </a>
             <a
               href="#avaliacoes"
               (click)="navigate($event, '#avaliacoes')"
-              class="hover:text-celadon-slate transition-colors py-1"
+              class="hover:text-celadon-slate py-1"
             >
               Reconhecimento
             </a>
             <a
               href="#boutique"
               (click)="navigate($event, '#boutique')"
-              class="hover:text-celadon-slate transition-colors py-1"
+              class="hover:text-celadon-slate py-1"
             >
               Boutique Física
             </a>
@@ -92,7 +92,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
             rel="noopener noreferrer"
             appMagneticSpring
             [magneticStrength]="0.24"
-            class="inline-flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[11px] sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate transition-colors duration-300 active:scale-[0.98]"
+            class="inline-flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[11px] sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate"
           >
             <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
               <span>Atendimento Exclusivo</span>
@@ -120,7 +120,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
 
       <div
         *ngIf="mobileMenuOpen()"
-        class="lg:hidden border-t border-travertine bg-vanilla-bone/95 backdrop-blur-md px-6 py-6"
+        class="lg:hidden border-t border-travertine bg-vanilla-bone px-6 py-6"
       >
         <div class="flex flex-col gap-4">
           <div class="inline-flex self-start items-center gap-2 px-3 py-1 rounded-full bg-soft-linen border border-travertine text-[11px] tracking-[0.08em] text-celadon-slate">

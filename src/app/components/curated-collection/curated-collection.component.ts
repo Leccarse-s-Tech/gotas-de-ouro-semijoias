@@ -22,10 +22,10 @@ export interface EditorialPiece {
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section id="colecoes" #collectionSection class="relative py-24 sm:py-36 bg-vanilla-bone border-t border-travertine overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.14]"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
-        <div class="max-w-[680px] mb-16 sm:mb-24 elastic-scroll-target">
+        <div class="max-w-[680px] mb-16 sm:mb-24">
           <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">
             Acervo Autoral
           </p>
@@ -41,34 +41,34 @@ export interface EditorialPiece {
           <article
             *ngFor="let piece of pieces()"
             [ngClass]="piece.layoutClass"
-            class="collection-item group relative elastic-scroll-target"
+            class="collection-item group relative"
           >
             <div
               appMagneticSpring
-              [magneticStrength]="0.07"
-              class="relative border border-travertine bg-soft-linen p-3 sm:p-4 transition-colors duration-500 group-hover:border-celadon-slate"
+              [magneticStrength]="0.06"
+              class="showcase-elastic-frame relative border border-[#D8D3C8] bg-soft-linen p-3 sm:p-4 hover:border-celadon-slate"
               [ngClass]="piece.archTop ? 'arch-mask-frame' : 'rounded-2xl'"
             >
               <div
                 class="relative overflow-hidden bg-travertine/30"
-                [ngClass]="[piece.aspectClass, piece.archTop ? 'rounded-t-[999px]' : 'rounded-xl']"
+                [ngClass]="[piece.aspectClass, piece.archTop ? 'rounded-t-[500px]' : 'rounded-xl']"
               >
                 <img
                   [src]="piece.image"
                   [alt]="piece.alt"
-                  class="w-full h-full object-cover transition-transform duration-700 ease-spring group-hover:scale-[1.04]"
+                  class="collection-photo w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"
                 />
 
-                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/55 via-transparent to-transparent opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/55 via-transparent to-transparent"></div>
 
-                <div class="absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6 flex items-end justify-end translate-y-0 sm:translate-y-3 opacity-100 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 transition-all duration-500 ease-spring">
+                <div class="absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6 flex items-end justify-start">
                   <a
                     [href]="whatsappUrl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-3 px-5 py-3 rounded-full bg-onyx-graphite/90 backdrop-blur-md text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate transition-colors"
+                    class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-3 px-5 py-3 rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8]/30 text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate"
                   >
                     <span class="whitespace-nowrap">Consultar disponibilidade no WhatsApp</span>
                     <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
@@ -133,25 +133,27 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
       this.ctx = gsap.context(() => {
         const items = gsap.utils.toArray<HTMLElement>('.collection-item');
         items.forEach((item, idx) => {
-          gsap.fromTo(
-            item,
-            { y: 48, opacity: 0.88 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 1.0,
-              ease: 'elastic.out(1, 0.6)',
-              scrollTrigger: {
-                trigger: item,
-                start: 'top 90%',
-                end: 'top 35%',
-                scrub: 1 + (idx % 2) * 0.25,
-                onToggle: (self) => {
-                  item.style.willChange = self.isActive ? 'transform' : 'auto';
+          const photo = item.querySelector<HTMLElement>('.collection-photo');
+          if (photo) {
+            gsap.fromTo(
+              photo,
+              { scale: 1.12, force3D: true },
+              {
+                scale: 1,
+                force3D: true,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: item,
+                  start: 'top 92%',
+                  end: 'bottom 20%',
+                  scrub: 0.6 + (idx % 2) * 0.15,
+                  onToggle: (self) => {
+                    photo.style.willChange = self.isActive ? 'transform' : 'auto';
+                  }
                 }
               }
-            }
-          );
+            );
+          }
         });
       }, this.collectionSection.nativeElement);
     });

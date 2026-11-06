@@ -13,10 +13,12 @@ export class MagneticSpringDirective implements AfterViewInit, OnDestroy {
   private yTo: gsap.QuickToFunc | null = null;
   private innerXTo: gsap.QuickToFunc | null = null;
   private innerYTo: gsap.QuickToFunc | null = null;
-  private initialized = false;
+
+  private readonly handleMouseEnter = (): void => {
+    this.el.nativeElement.style.willChange = 'transform';
+  };
 
   private readonly handleMouseMove = (event: MouseEvent): void => {
-    this.ensureInit();
     const node = this.el.nativeElement;
     const rect = node.getBoundingClientRect();
     const relX = event.clientX - (rect.left + rect.width / 2);
@@ -37,10 +39,6 @@ export class MagneticSpringDirective implements AfterViewInit, OnDestroy {
     node.style.willChange = 'auto';
   };
 
-  private readonly handleMouseEnter = (): void => {
-    this.el.nativeElement.style.willChange = 'transform';
-  };
-
   constructor(
     private el: ElementRef<HTMLElement>,
     private ngZone: NgZone
@@ -53,24 +51,19 @@ export class MagneticSpringDirective implements AfterViewInit, OnDestroy {
 
     this.ngZone.runOutsideAngular(() => {
       const node = this.el.nativeElement;
+      this.xTo = gsap.quickTo(node, 'x', { duration: 0.4, ease: 'power3.out' });
+      this.yTo = gsap.quickTo(node, 'y', { duration: 0.4, ease: 'power3.out' });
+
+      const inner = node.querySelector<HTMLElement>(this.magneticInnerSelector);
+      if (inner) {
+        this.innerXTo = gsap.quickTo(inner, 'x', { duration: 0.4, ease: 'power3.out' });
+        this.innerYTo = gsap.quickTo(inner, 'y', { duration: 0.4, ease: 'power3.out' });
+      }
+
       node.addEventListener('mouseenter', this.handleMouseEnter, { passive: true });
       node.addEventListener('mousemove', this.handleMouseMove, { passive: true });
       node.addEventListener('mouseleave', this.handleMouseLeave, { passive: true });
     });
-  }
-
-  private ensureInit(): void {
-    if (this.initialized) return;
-    this.initialized = true;
-    const node = this.el.nativeElement;
-    this.xTo = gsap.quickTo(node, 'x', { duration: 0.75, ease: 'elastic.out(1, 0.45)' });
-    this.yTo = gsap.quickTo(node, 'y', { duration: 0.75, ease: 'elastic.out(1, 0.45)' });
-
-    const inner = node.querySelector<HTMLElement>(this.magneticInnerSelector);
-    if (inner) {
-      this.innerXTo = gsap.quickTo(inner, 'x', { duration: 0.55, ease: 'power3.out' });
-      this.innerYTo = gsap.quickTo(inner, 'y', { duration: 0.55, ease: 'power3.out' });
-    }
   }
 
   ngOnDestroy(): void {

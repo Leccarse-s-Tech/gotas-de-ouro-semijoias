@@ -9,10 +9,10 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section id="manifesto" class="relative py-28 sm:py-40 bg-soft-linen border-t border-travertine overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.14]"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start elastic-scroll-target">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
           <div class="lg:col-span-6">
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-4">
               Essência &amp; Curadoria
@@ -38,7 +38,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.25"
-                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate transition-colors duration-300"
+                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2.5 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>
@@ -51,7 +51,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
           </div>
         </div>
 
-        <div class="mt-16 sm:mt-24 pt-12 border-t border-travertine grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14 elastic-scroll-target">
+        <div class="mt-16 sm:mt-24 pt-12 border-t border-travertine grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14">
           <div class="flex flex-col gap-2">
             <span class="text-[11px] uppercase tracking-[0.22em] text-celadon-slate">01</span>
             <h3 class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">

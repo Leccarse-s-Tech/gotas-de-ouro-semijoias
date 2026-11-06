@@ -10,11 +10,11 @@ import reviewsData from '../../../assets/data/reviews.json';
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <section id="boutique" class="relative py-24 sm:py-36 bg-soft-linen border-t border-travertine overflow-hidden">
-      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.14]"></div>
+      <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div class="lg:col-span-5 elastic-scroll-target">
+          <div class="lg:col-span-5">
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">
               Nossa Boutique Física &amp; Envio Nacional
             </p>
@@ -60,7 +60,7 @@ import reviewsData from '../../../assets/data/reviews.json';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.24"
-                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate transition-colors duration-300"
+                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                   <span>Traçar rota no Google Maps</span>
@@ -76,7 +76,7 @@ import reviewsData from '../../../assets/data/reviews.json';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate transition-colors duration-300"
+                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate"
               >
                 <span class="magnetic-inner whitespace-nowrap">Atendimento Exclusivo</span>
               </a>
@@ -84,12 +84,12 @@ import reviewsData from '../../../assets/data/reviews.json';
           </div>
 
           <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-12 gap-6 items-end">
-            <div class="sm:col-span-7 border border-travertine bg-vanilla-bone p-3 rounded-2xl">
+            <div class="sm:col-span-7 border border-[#D8D3C8] bg-vanilla-bone p-3 rounded-2xl">
               <div class="overflow-hidden rounded-xl">
                 <img
                   src="assets/editorial/fachada-editorial-1.jpg"
                   alt="Boutique fisica Gotas de Ouro Semijoias"
-                  class="w-full aspect-[16/10] object-cover transition-transform duration-700 ease-spring hover:scale-105"
+                  class="w-full aspect-[16/10] object-cover"
                   loading="lazy"
                   decoding="async"
                 />
@@ -100,12 +100,12 @@ import reviewsData from '../../../assets/data/reviews.json';
               </div>
             </div>
 
-            <div class="sm:col-span-5 arch-mask-frame border border-travertine bg-vanilla-bone p-3">
-              <div class="overflow-hidden rounded-t-[999px]">
+            <div class="sm:col-span-5 arch-mask-frame border border-[#D8D3C8] bg-vanilla-bone p-3">
+              <div class="overflow-hidden rounded-t-[500px]">
                 <img
                   src="assets/editorial/fachada-editorial-2.jpg"
                   alt="Entrada da boutique fisica Gotas de Ouro"
-                  class="w-full aspect-[3/4] object-cover transition-transform duration-700 ease-spring hover:scale-105"
+                  class="w-full aspect-[3/4] object-cover"
                   loading="lazy"
                   decoding="async"
                 />

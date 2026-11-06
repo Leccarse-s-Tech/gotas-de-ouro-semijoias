@@ -5,21 +5,22 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface QuickElasticTarget {
+  el: HTMLElement;
+  yTo: gsap.QuickToFunc;
+  skewTo: gsap.QuickToFunc;
+  visible: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ScrollPhysicsService implements OnDestroy {
   private lenis: Lenis | null = null;
   private tickerFn: ((time: number) => void) | null = null;
-  private rafId: number | null = null;
   private observer: IntersectionObserver | null = null;
-  private visibleTargets = new Set<HTMLElement>();
-
-  private currentVelocity = 0;
-  private targetVelocity = 0;
-  private springValue = 0;
-  private springVelocity = 0;
-  private isSettled = true;
+  private settleTimer: ReturnType<typeof setTimeout> | null = null;
+  private elasticTargets = new Map<HTMLElement, QuickElasticTarget>();
 
   readonly isScrolled = signal<boolean>(false);
 
@@ -30,97 +31,91 @@ export class ScrollPhysicsService implements OnDestroy {
 
     this.ngZone.runOutsideAngular(() => {
       this.lenis = new Lenis({
-        duration: 1.15,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        lerp: 0.08,
         smoothWheel: true,
-        wheelMultiplier: 0.95,
-        touchMultiplier: 1.5
+        syncTouch: false
       });
 
-      this.observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            const el = entry.target as HTMLElement;
-            if (entry.isIntersecting) {
-              this.visibleTargets.add(el);
-              el.style.willChange = 'transform';
-            } else {
-              this.visibleTargets.delete(el);
-              el.style.willChange = 'auto';
-              el.style.transform = '';
-            }
-          }
-        },
-        { rootMargin: '120px 0px' }
-      );
+      this.lenis.on('scroll', ScrollTrigger.update);
 
-      const targets = document.querySelectorAll<HTMLElement>('.elastic-scroll-target');
-      targets.forEach((el) => this.observer?.observe(el));
+      this.tickerFn = (time: number) => {
+        this.lenis?.raf(time * 1000);
+      };
+
+      gsap.ticker.add(this.tickerFn);
+      gsap.ticker.lagSmoothing(0);
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const clampVelocity = gsap.utils.clamp(-3, 3);
+
+      if (!reducedMotion) {
+        this.observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              const target = this.elasticTargets.get(entry.target as HTMLElement);
+              if (!target) continue;
+              target.visible = entry.isIntersecting;
+              target.el.style.willChange = entry.isIntersecting ? 'transform' : 'auto';
+              if (!entry.isIntersecting) {
+                target.yTo(0);
+                target.skewTo(0);
+              }
+            }
+          },
+          { rootMargin: '100px 0px' }
+        );
+
+        const nodes = document.querySelectorAll<HTMLElement>('.showcase-elastic-frame');
+        nodes.forEach((node) => {
+          const item: QuickElasticTarget = {
+            el: node,
+            yTo: gsap.quickTo(node, 'y', { duration: 0.4, ease: 'power3.out' }),
+            skewTo: gsap.quickTo(node, 'skewY', { duration: 0.4, ease: 'power3.out' }),
+            visible: false
+          };
+          this.elasticTargets.set(node, item);
+          this.observer?.observe(node);
+        });
+      }
 
       this.lenis.on('scroll', (e: { scroll: number; velocity: number }) => {
-        ScrollTrigger.update();
-        this.targetVelocity = Math.max(-36, Math.min(36, e.velocity || 0));
-        this.isSettled = false;
-
         const scrolledNow = e.scroll > 48;
         if (this.isScrolled() !== scrolledNow) {
           this.ngZone.run(() => {
             this.isScrolled.set(scrolledNow);
           });
         }
-      });
 
-      const stiffness = 0.14;
-      const damping = 0.78;
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion && this.elasticTargets.size > 0) {
+          const clamped = clampVelocity((e.velocity || 0) * 0.08);
+          const shiftY = clamped * -2.2;
+          const skewY = clamped * 0.35;
 
-      this.tickerFn = (time: number) => {
-        this.lenis?.raf(time * 1000);
-
-        if (!reducedMotion && !this.isSettled) {
-          this.currentVelocity += (this.targetVelocity - this.currentVelocity) * 0.18;
-          this.targetVelocity *= 0.86;
-
-          const force = (this.currentVelocity - this.springValue) * stiffness;
-          this.springVelocity = (this.springVelocity + force) * damping;
-          this.springValue += this.springVelocity;
-
-          if (
-            Math.abs(this.springValue) < 0.01 &&
-            Math.abs(this.springVelocity) < 0.01 &&
-            Math.abs(this.targetVelocity) < 0.01
-          ) {
-            this.springValue = 0;
-            this.springVelocity = 0;
-            this.currentVelocity = 0;
-            this.targetVelocity = 0;
-            this.isSettled = true;
-            this.visibleTargets.forEach((el) => {
-              el.style.transform = '';
-            });
-            return;
-          }
-
-          const normalized = Math.max(-1, Math.min(1, this.springValue / 30));
-          const stretchY = (1 + Math.abs(normalized) * 0.024).toFixed(4);
-          const shiftY = (normalized * -6.5).toFixed(2);
-          const transformStr = `translate3d(0, ${shiftY}px, 0) scaleY(${stretchY})`;
-
-          this.visibleTargets.forEach((el) => {
-            el.style.transform = transformStr;
+          this.elasticTargets.forEach((t) => {
+            if (t.visible) {
+              t.yTo(shiftY);
+              t.skewTo(skewY);
+            }
           });
-        }
-      };
 
-      gsap.ticker.add(this.tickerFn);
-      gsap.ticker.lagSmoothing(0);
+          if (this.settleTimer) clearTimeout(this.settleTimer);
+          this.settleTimer = setTimeout(() => {
+            this.elasticTargets.forEach((t) => {
+              if (t.visible) {
+                t.yTo(0);
+                t.skewTo(0);
+              }
+            });
+          }, 90);
+        }
+      });
     });
   }
 
   scrollToSection(selector: string): void {
     this.ngZone.runOutsideAngular(() => {
       if (this.lenis) {
-        this.lenis.scrollTo(selector, { offset: -64, duration: 1.3 });
+        this.lenis.scrollTo(selector, { offset: -64, duration: 1.2 });
       } else {
         const target = document.querySelector(selector);
         target?.scrollIntoView({ behavior: 'smooth' });
@@ -130,9 +125,9 @@ export class ScrollPhysicsService implements OnDestroy {
 
   destroy(): void {
     this.ngZone.runOutsideAngular(() => {
-      if (this.rafId !== null) {
-        cancelAnimationFrame(this.rafId);
-        this.rafId = null;
+      if (this.settleTimer) {
+        clearTimeout(this.settleTimer);
+        this.settleTimer = null;
       }
       if (this.tickerFn) {
         gsap.ticker.remove(this.tickerFn);
@@ -140,11 +135,11 @@ export class ScrollPhysicsService implements OnDestroy {
       }
       this.observer?.disconnect();
       this.observer = null;
-      this.visibleTargets.forEach((el) => {
-        el.style.willChange = 'auto';
-        el.style.transform = '';
+      this.elasticTargets.forEach((t) => {
+        t.el.style.willChange = 'auto';
+        gsap.killTweensOf(t.el);
       });
-      this.visibleTargets.clear();
+      this.elasticTargets.clear();
       this.lenis?.destroy();
       this.lenis = null;
       ScrollTrigger.getAll().forEach((t) => t.kill());
