@@ -12,7 +12,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
     <footer class="relative w-full max-w-full overflow-hidden bg-soft-linen border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-12 px-4 sm:px-6 lg:px-12">
+      <div class="relative z-10 max-w-[1680px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-12 px-4 sm:px-8 xl:px-16">
         <div class="min-w-0">
           <img
             src="assets/editorial/logo-gotas-de-ouro.svg"
@@ -98,7 +98,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
         </div>
       </div>
 
-      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 border-t border-travertine flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-mineral-taupe pb-20 sm:pb-6">
+      <div class="relative z-10 max-w-[1680px] mx-auto px-4 sm:px-8 xl:px-16 py-6 border-t border-travertine flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-mineral-taupe pb-20 sm:pb-6">
         <p>Gotas de Ouro Semijoias. Todos os direitos reservados.</p>
         <p>Curadoria Autoral &amp; Envio Nacional para todo o Brasil.</p>
       </div>
@@ -111,7 +111,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
       appMagneticSpring
       [magneticStrength]="0.32"
       aria-label="Atendimento Exclusivo via WhatsApp"
-      class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 inline-flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8] text-xs shadow-lg hover:bg-celadon-slate gpu-animated"
+      class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 inline-flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-travertine text-xs shadow-lg hover:bg-celadon-slate gpu-animated"
     >
       <span class="magnetic-inner inline-flex items-center gap-2">
         <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">

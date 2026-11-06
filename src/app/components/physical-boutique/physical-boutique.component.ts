@@ -13,10 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="boutique" #boutiqueSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-soft-linen border-t border-travertine">
+    <section id="boutique" #boutiqueSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-8 xl:px-12 bg-soft-linen border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto w-full">
+      <div class="relative z-10 w-full max-w-7xl 2xl:max-w-[1600px] mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div #boutiqueTextBlock class="min-w-0 opacity-0 gpu-animated">
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">

@@ -13,10 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="topo" #heroSection class="relative w-full max-w-full overflow-hidden pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6 lg:px-12 bg-vanilla-bone">
+    <section id="topo" #heroSection class="relative w-full max-w-full overflow-hidden pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-8 xl:px-16 bg-vanilla-bone">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto w-full">
+      <div class="relative z-10 w-full max-w-full xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end mb-10 sm:mb-14">
           <div #heroTitleBlock class="lg:col-span-7 min-w-0 opacity-0 gpu-animated">
             <p class="text-[11px] uppercase tracking-[0.22em] text-mineral-taupe mb-3 sm:mb-4">
@@ -63,7 +63,7 @@ gsap.registerPlugin(ScrollTrigger);
 
         <div
           #archContainer
-          class="w-full max-w-5xl mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[16/10] border border-travertine bg-travertine/40 gpu-animated"
+          class="w-full max-w-5xl xl:max-w-[1400px] 2xl:max-w-[1600px] mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[16/10] xl:aspect-[16/9] 2xl:aspect-[21/10] border border-travertine bg-travertine/40 gpu-animated"
         >
           <video
             #heroVideo

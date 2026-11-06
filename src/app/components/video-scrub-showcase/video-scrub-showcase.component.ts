@@ -12,11 +12,11 @@ gsap.registerPlugin(ScrollTrigger);
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="atelier-filme" #scrubSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-soft-linen border-t border-travertine">
+    <section id="atelier-filme" #scrubSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-8 xl:px-12 bg-soft-linen border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto w-full">
-        <div #scrubHeader class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 opacity-0 gpu-animated">
+      <div class="relative z-10 w-full max-w-full xl:max-w-[1540px] 2xl:max-w-[1720px] mx-auto">
+        <div #scrubHeader class="w-full max-w-5xl xl:max-w-none mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 opacity-0 gpu-animated">
           <div>
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-2">
               Matéria &amp; Luz
@@ -41,7 +41,7 @@ gsap.registerPlugin(ScrollTrigger);
 
         <div
           #scrubArchBox
-          class="w-full max-w-5xl mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[16/10] border border-travertine bg-onyx-graphite gpu-animated"
+          class="w-full max-w-5xl xl:max-w-none mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] md:aspect-[16/10] xl:aspect-[21/9] 2xl:aspect-[2.35/1] border border-travertine bg-onyx-graphite gpu-animated"
         >
           <video
             #scrubVideo
@@ -84,7 +84,7 @@ gsap.registerPlugin(ScrollTrigger);
           </div>
         </div>
 
-        <div #scrubFooterBlock class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-center md:text-left mt-8 pt-6 border-t border-travertine">
+        <div #scrubFooterBlock class="w-full max-w-5xl xl:max-w-none mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-center md:text-left mt-8 pt-6 border-t border-travertine">
           <div class="scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 opacity-0 gpu-animated">
             <span class="font-editorial italic text-lg text-onyx-graphite">Acabamento Primoroso</span>
             <span class="text-xs text-mineral-taupe">Seleção cuidadosa em cada detalhe</span>

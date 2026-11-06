@@ -19,10 +19,10 @@ export interface EditorialPiece {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
-    <section id="colecoes" #collectionSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
+    <section id="colecoes" #collectionSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-8 xl:px-12 bg-vanilla-bone border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto w-full">
+      <div class="relative z-10 w-full max-w-7xl 2xl:max-w-[1600px] mx-auto">
         <div #collectionHeader class="max-w-[680px] mb-10 sm:mb-16 opacity-0 gpu-animated">
           <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">
             Acervo Autoral
@@ -35,7 +35,7 @@ export interface EditorialPiece {
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 xl:gap-16 w-full">
           <article
             *ngFor="let piece of pieces()"
             [attr.data-column]="piece.columnIndex"
@@ -43,7 +43,7 @@ export interface EditorialPiece {
             class="collection-item w-full max-w-full min-w-0 overflow-hidden relative opacity-0 gpu-animated"
           >
             <div
-              class="collection-card-shell w-full max-w-full min-w-0 border border-[#D8D3C8] bg-soft-linen p-2.5 sm:p-3.5 hover:border-celadon-slate overflow-hidden gpu-animated"
+              class="collection-card-shell w-full max-w-full min-w-0 border border-travertine bg-soft-linen p-2.5 sm:p-3.5 hover:border-celadon-slate overflow-hidden gpu-animated"
               [ngClass]="piece.archTop ? 'rounded-t-[999px] rounded-b-2xl' : 'rounded-2xl'"
             >
               <div
@@ -65,7 +65,7 @@ export interface EditorialPiece {
                     [href]="whatsappUrl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="pointer-events-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm px-4 py-2.5 max-w-[calc(100%-2rem)] rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8]/30 font-medium tracking-[0.02em] hover:bg-celadon-slate overflow-hidden"
+                    class="pointer-events-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm px-4 py-2.5 max-w-[calc(100%-2rem)] rounded-full bg-onyx-graphite text-vanilla-bone border border-travertine/30 font-medium tracking-[0.02em] hover:bg-celadon-slate overflow-hidden"
                   >
                     <span class="truncate">Consultar disponibilidade no WhatsApp</span>
                     <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">

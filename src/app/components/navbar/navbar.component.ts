@@ -13,7 +13,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
       class="fixed top-0 left-0 right-0 z-40 w-full max-w-full border-b gpu-animated"
       [ngClass]="scrollService.isScrolled() ? 'bg-vanilla-bone border-travertine' : 'bg-vanilla-bone/95 border-travertine/60'"
     >
-      <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-16 md:h-20 flex items-center justify-between gap-2 sm:gap-4">
+      <div class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 xl:px-16 h-16 md:h-20 flex items-center justify-between gap-2 sm:gap-4">
         <a
           href="#topo"
           (click)="navigate($event, '#topo')"
@@ -37,7 +37,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
           </div>
         </a>
 
-        <nav class="hidden xl:flex items-center gap-8 text-[13px] font-medium text-onyx-graphite/85">
+        <nav class="hidden xl:flex items-center gap-8 xl:gap-10 2xl:gap-14 text-[13px] font-medium text-onyx-graphite/85">
           <a
             href="#manifesto"
             (click)="navigate($event, '#manifesto')"

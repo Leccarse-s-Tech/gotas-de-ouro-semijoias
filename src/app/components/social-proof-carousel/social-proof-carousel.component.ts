@@ -19,11 +19,11 @@ export interface VerifiedReview {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="avaliacoes" #reviewsSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
+    <section id="avaliacoes" #reviewsSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-0 bg-vanilla-bone border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto w-full">
-        <div #reviewsHeader class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 opacity-0 gpu-animated">
+      <div class="relative z-10 w-full">
+        <div #reviewsHeader class="max-w-7xl mx-auto px-4 sm:px-8 mb-10 sm:mb-14 flex flex-col sm:flex-row sm:items-end justify-between gap-6 opacity-0 gpu-animated">
           <div class="min-w-0">
             <div class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-soft-linen border border-travertine mb-5 max-w-full">
               <div class="flex items-center gap-0.5 text-onyx-graphite shrink-0">
@@ -58,11 +58,11 @@ export interface VerifiedReview {
           </a>
         </div>
 
-        <div #marqueeContainer class="relative z-10 overflow-hidden w-full opacity-0 gpu-animated">
+        <div #marqueeContainer class="relative z-10 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] opacity-0 gpu-animated">
           <div class="animate-marquee-left gap-4 sm:gap-6 py-1">
             <article
               *ngFor="let rev of marqueeReviews()"
-              class="w-[280px] sm:w-[340px] md:w-[380px] shrink-0 rounded-2xl bg-soft-linen border border-[#D8D3C8] p-5 sm:p-6 flex flex-col justify-between gap-5"
+              class="w-[280px] sm:w-[340px] md:w-[380px] 2xl:w-[420px] shrink-0 rounded-2xl bg-soft-linen border border-travertine p-5 sm:p-6 flex flex-col justify-between gap-5"
             >
               <div class="flex flex-col gap-3.5">
                 <div class="flex items-center gap-1 text-onyx-graphite" aria-label="5 estrelas">
@@ -76,7 +76,7 @@ export interface VerifiedReview {
                 </p>
               </div>
 
-              <div class="pt-3.5 border-t border-[#D8D3C8]/70">
+              <div class="pt-3.5 border-t border-travertine/70">
                 <p class="text-xs font-semibold text-onyx-graphite tracking-[0.02em] truncate">{{ rev.author }}</p>
               </div>
             </article>

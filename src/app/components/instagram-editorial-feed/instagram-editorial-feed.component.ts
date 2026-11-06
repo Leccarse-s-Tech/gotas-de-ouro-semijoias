@@ -12,10 +12,10 @@ gsap.registerPlugin(ScrollTrigger);
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section #feedSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
+    <section #feedSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-8 xl:px-12 bg-vanilla-bone border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto w-full">
+      <div class="relative z-10 w-full max-w-7xl 2xl:max-w-[1600px] mx-auto">
         <div #feedHeader class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-14 opacity-0 gpu-animated">
           <div class="min-w-0">
             <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl text-onyx-graphite leading-tight">
@@ -54,7 +54,7 @@ gsap.registerPlugin(ScrollTrigger);
             [href]="instagramReelUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="lg:col-span-5 group relative rounded-t-[999px] rounded-b-2xl overflow-hidden border border-[#D8D3C8] bg-soft-linen p-3 flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
+            class="lg:col-span-5 group relative rounded-t-[999px] rounded-b-2xl overflow-hidden border border-travertine bg-soft-linen p-3 flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
           >
             <div class="relative overflow-hidden rounded-t-[999px] rounded-b-xl aspect-[4/5] bg-onyx-graphite">
               <img
@@ -67,7 +67,7 @@ gsap.registerPlugin(ScrollTrigger);
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/60 via-transparent to-transparent"></div>
               <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-2 text-vanilla-bone text-xs">
                 <span class="font-editorial italic text-base sm:text-lg leading-snug truncate">Discreta no trabalho, impecável nos detalhes</span>
-                <span class="px-3 py-1 rounded-full bg-onyx-graphite border border-[#D8D3C8]/40 shrink-0">Destaque</span>
+                <span class="px-3 py-1 rounded-full bg-onyx-graphite border border-travertine/40 shrink-0">Destaque</span>
               </div>
             </div>
             <div class="pt-3 px-2 flex items-center justify-between gap-2 text-xs text-mineral-taupe">
@@ -82,7 +82,7 @@ gsap.registerPlugin(ScrollTrigger);
                 [href]="instagramProfileUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="feed-stagger-item group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
+                class="feed-stagger-item group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
               >
                 <div class="overflow-hidden rounded-xl aspect-[16/11]">
                   <img
@@ -103,7 +103,7 @@ gsap.registerPlugin(ScrollTrigger);
                 [href]="instagramProfileUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="feed-stagger-item group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
+                class="feed-stagger-item group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
               >
                 <div class="overflow-hidden rounded-xl aspect-[16/11]">
                   <img
@@ -121,7 +121,7 @@ gsap.registerPlugin(ScrollTrigger);
               </a>
             </div>
 
-            <div class="feed-stagger-item border border-[#D8D3C8] bg-soft-linen rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 min-w-0 opacity-0 gpu-animated">
+            <div class="feed-stagger-item border border-travertine bg-soft-linen rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 min-w-0 opacity-0 gpu-animated">
               <div class="min-w-0">
                 <p class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.12] pb-1">
                   Deseja receber vídeos personalizados de uma peça?
