@@ -10,6 +10,7 @@ export interface EditorialPiece {
   alt: string;
   image: string;
   archTop: boolean;
+  columnIndex: number;
 }
 
 @Component({
@@ -22,7 +23,7 @@ export interface EditorialPiece {
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-7xl mx-auto w-full">
-        <div class="max-w-[680px] mb-10 sm:mb-16">
+        <div #collectionHeader class="max-w-[680px] mb-10 sm:mb-16 opacity-0 gpu-animated">
           <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">
             Acervo Autoral
           </p>
@@ -37,10 +38,12 @@ export interface EditorialPiece {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 w-full">
           <article
             *ngFor="let piece of pieces()"
-            class="collection-item w-full max-w-full min-w-0 overflow-hidden relative gpu-animated"
+            [attr.data-column]="piece.columnIndex"
+            [attr.data-arch]="piece.archTop"
+            class="collection-item w-full max-w-full min-w-0 overflow-hidden relative opacity-0 gpu-animated"
           >
             <div
-              class="w-full max-w-full min-w-0 border border-[#D8D3C8] bg-soft-linen p-2.5 sm:p-3.5 hover:border-celadon-slate overflow-hidden"
+              class="collection-card-shell w-full max-w-full min-w-0 border border-[#D8D3C8] bg-soft-linen p-2.5 sm:p-3.5 hover:border-celadon-slate overflow-hidden gpu-animated"
               [ngClass]="piece.archTop ? 'rounded-t-[999px] rounded-b-2xl' : 'rounded-2xl'"
             >
               <div
@@ -80,6 +83,7 @@ export interface EditorialPiece {
 })
 export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
   @ViewChild('collectionSection') collectionSection!: ElementRef<HTMLElement>;
+  @ViewChild('collectionHeader') collectionHeader!: ElementRef<HTMLElement>;
 
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
   private readonly ngZone = inject(NgZone);
@@ -90,25 +94,29 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
       id: 'peca-01',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 01',
       image: 'assets/editorial/joia-1-editorial.webp',
-      archTop: true
+      archTop: true,
+      columnIndex: 0
     },
     {
       id: 'peca-02',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 02',
       image: 'assets/editorial/joia-2-editorial.webp',
-      archTop: false
+      archTop: false,
+      columnIndex: 1
     },
     {
       id: 'peca-03',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 03',
       image: 'assets/editorial/joia-3-editorial.webp',
-      archTop: false
+      archTop: false,
+      columnIndex: 0
     },
     {
       id: 'peca-04',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 04',
       image: 'assets/editorial/joia-4-editorial.webp',
-      archTop: true
+      archTop: true,
+      columnIndex: 1
     }
   ]);
 
@@ -117,43 +125,90 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
 
     this.ngZone.runOutsideAngular(() => {
       const rootEl = this.collectionSection?.nativeElement;
-      if (!rootEl) return;
+      const headerEl = this.collectionHeader?.nativeElement;
+      if (!rootEl || !headerEl) return;
 
       this.mm = gsap.matchMedia();
 
       this.mm.add('(min-width: 768px)', () => {
+        gsap.fromTo(
+          headerEl,
+          { y: 40, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: rootEl,
+              start: 'top 85%',
+              end: 'top 45%',
+              scrub: 0.5
+            }
+          }
+        );
+
         const items = gsap.utils.toArray<HTMLElement>('.collection-item', rootEl);
         items.forEach((item) => {
+          const isArch = item.getAttribute('data-arch') === 'true';
+          const isRightCol = item.getAttribute('data-column') === '1';
+          const shell = item.querySelector<HTMLElement>('.collection-card-shell');
           const photo = item.querySelector<HTMLElement>('.collection-photo');
+
+          const startY = isRightCol ? 110 : 75;
           gsap.fromTo(
             item,
-            { y: 24, force3D: true },
+            { y: startY, opacity: 0, scale: 0.92, force3D: true },
             {
               y: 0,
-              force3D: true,
+              opacity: 1,
+              scale: 1,
               ease: 'power2.out',
+              force3D: true,
               scrollTrigger: {
                 trigger: item,
-                start: 'top 92%',
-                end: 'top 35%',
-                scrub: 0.8
+                start: 'top 90%',
+                end: 'top 30%',
+                scrub: 0.6
               }
             }
           );
 
+          if (isArch && shell) {
+            gsap.fromTo(
+              shell,
+              {
+                clipPath: 'inset(15% 8% 0% 8% round 999px 999px 16px 16px)',
+                force3D: true
+              },
+              {
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+                ease: 'none',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: item,
+                  start: 'top 88%',
+                  end: 'top 32%',
+                  scrub: 0.6
+                }
+              }
+            );
+          }
+
           if (photo) {
             gsap.fromTo(
               photo,
-              { scale: 1.08, force3D: true },
+              { scale: 1.15, yPercent: -7, force3D: true },
               {
-                scale: 1,
+                scale: 1.15,
+                yPercent: 7,
+                ease: 'none',
                 force3D: true,
-                ease: 'power2.out',
                 scrollTrigger: {
                   trigger: item,
-                  start: 'top 92%',
-                  end: 'bottom 25%',
-                  scrub: 0.8
+                  start: 'top bottom',
+                  end: 'bottom top',
+                  scrub: 0.5
                 }
               }
             );
@@ -162,16 +217,38 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
       });
 
       this.mm.add('(max-width: 767px)', () => {
+        gsap.fromTo(
+          headerEl,
+          { y: 25, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: rootEl,
+              start: 'top 90%',
+              end: 'top 60%',
+              scrub: 0.5
+            }
+          }
+        );
+
         const items = gsap.utils.toArray<HTMLElement>('.collection-item', rootEl);
         items.forEach((item) => {
+          const isArch = item.getAttribute('data-arch') === 'true';
+          const shell = item.querySelector<HTMLElement>('.collection-card-shell');
           const photo = item.querySelector<HTMLElement>('.collection-photo');
+
           gsap.fromTo(
             item,
-            { y: 14, force3D: true },
+            { y: 40, opacity: 0, scale: 0.96, force3D: true },
             {
               y: 0,
-              force3D: true,
+              opacity: 1,
+              scale: 1,
               ease: 'power2.out',
+              force3D: true,
               scrollTrigger: {
                 trigger: item,
                 start: 'top 94%',
@@ -181,18 +258,40 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
             }
           );
 
+          if (isArch && shell) {
+            gsap.fromTo(
+              shell,
+              {
+                clipPath: 'inset(8% 4% 0% 4% round 999px 999px 16px 16px)',
+                force3D: true
+              },
+              {
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+                ease: 'none',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: item,
+                  start: 'top 92%',
+                  end: 'top 45%',
+                  scrub: 0.5
+                }
+              }
+            );
+          }
+
           if (photo) {
             gsap.fromTo(
               photo,
-              { scale: 1.04, force3D: true },
+              { scale: 1.15, yPercent: -5, force3D: true },
               {
-                scale: 1,
+                scale: 1.15,
+                yPercent: 5,
+                ease: 'none',
                 force3D: true,
-                ease: 'power2.out',
                 scrollTrigger: {
                   trigger: item,
-                  start: 'top 94%',
-                  end: 'bottom 30%',
+                  start: 'top bottom',
+                  end: 'bottom top',
                   scrub: 0.5
                 }
               }

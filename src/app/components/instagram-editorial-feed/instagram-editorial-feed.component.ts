@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
+
+gsap.registerPlugin(ScrollTrigger);
 
 @Component({
   selector: 'app-instagram-editorial-feed',
@@ -8,11 +12,11 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
+    <section #feedSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-7xl mx-auto w-full">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-14">
+        <div #feedHeader class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-14 opacity-0 gpu-animated">
           <div class="min-w-0">
             <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl text-onyx-graphite leading-tight">
               Diário visual &amp; <span class="italic font-light leading-[1.1] pb-1 inline-block">novas criações.</span>
@@ -46,16 +50,17 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           <a
+            #feedArchCard
             [href]="instagramReelUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="lg:col-span-5 group relative rounded-t-[999px] rounded-b-2xl overflow-hidden border border-[#D8D3C8] bg-soft-linen p-3 flex flex-col justify-between min-w-0"
+            class="lg:col-span-5 group relative rounded-t-[999px] rounded-b-2xl overflow-hidden border border-[#D8D3C8] bg-soft-linen p-3 flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
           >
             <div class="relative overflow-hidden rounded-t-[999px] rounded-b-xl aspect-[4/5] bg-onyx-graphite">
               <img
                 src="assets/editorial/joia-4-editorial.webp"
                 alt="Curadoria de semijoias Gotas de Ouro no Instagram"
-                class="w-full h-full object-cover gpu-animated"
+                class="feed-arch-photo w-full h-full object-cover gpu-animated"
                 loading="eager"
                 decoding="async"
               />
@@ -71,13 +76,13 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
             </div>
           </a>
 
-          <div class="lg:col-span-7 flex flex-col justify-between gap-4 sm:gap-6 min-w-0">
+          <div #feedRightColumn class="lg:col-span-7 flex flex-col justify-between gap-4 sm:gap-6 min-w-0">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <a
                 [href]="instagramProfileUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0"
+                class="feed-stagger-item group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
               >
                 <div class="overflow-hidden rounded-xl aspect-[16/11]">
                   <img
@@ -98,7 +103,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
                 [href]="instagramProfileUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0"
+                class="feed-stagger-item group border border-[#D8D3C8] bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
               >
                 <div class="overflow-hidden rounded-xl aspect-[16/11]">
                   <img
@@ -116,7 +121,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
               </a>
             </div>
 
-            <div class="border border-[#D8D3C8] bg-soft-linen rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 min-w-0">
+            <div class="feed-stagger-item border border-[#D8D3C8] bg-soft-linen rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 min-w-0 opacity-0 gpu-animated">
               <div class="min-w-0">
                 <p class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.12] pb-1">
                   Deseja receber vídeos personalizados de uma peça?
@@ -147,8 +152,165 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
     </section>
   `
 })
-export class InstagramEditorialFeedComponent {
+export class InstagramEditorialFeedComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('feedSection') feedSection!: ElementRef<HTMLElement>;
+  @ViewChild('feedHeader') feedHeader!: ElementRef<HTMLElement>;
+  @ViewChild('feedArchCard') feedArchCard!: ElementRef<HTMLElement>;
+  @ViewChild('feedRightColumn') feedRightColumn!: ElementRef<HTMLElement>;
+
   readonly instagramProfileUrl = 'https://www.instagram.com/gotasdeouro.bonsucesso/';
   readonly instagramReelUrl = 'https://www.instagram.com/p/DeSDjxkhj4a/';
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
+
+  private mm: gsap.MatchMedia | null = null;
+
+  constructor(private ngZone: NgZone) {}
+
+  ngAfterViewInit(): void {
+    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    this.ngZone.runOutsideAngular(() => {
+      const sectionEl = this.feedSection?.nativeElement;
+      const headerEl = this.feedHeader?.nativeElement;
+      const archCard = this.feedArchCard?.nativeElement;
+      const rightCol = this.feedRightColumn?.nativeElement;
+
+      if (!sectionEl || !headerEl || !archCard || !rightCol) return;
+
+      this.mm = gsap.matchMedia();
+
+      this.mm.add('(min-width: 768px)', () => {
+        gsap.fromTo(
+          headerEl,
+          { y: 35, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: sectionEl,
+              start: 'top 85%',
+              end: 'top 50%',
+              scrub: 0.5
+            }
+          }
+        );
+
+        gsap.fromTo(
+          archCard,
+          {
+            scale: 0.88,
+            y: 50,
+            opacity: 0,
+            clipPath: 'inset(10% 8% 0% 8% round 999px 999px 16px 16px)',
+            force3D: true
+          },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: archCard,
+              start: 'top 88%',
+              end: 'top 35%',
+              scrub: 0.6
+            }
+          }
+        );
+
+        const staggerItems = rightCol.querySelectorAll<HTMLElement>('.feed-stagger-item');
+        gsap.fromTo(
+          staggerItems,
+          { y: 45, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.15,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: rightCol,
+              start: 'top 85%',
+              end: 'top 40%',
+              scrub: 0.5
+            }
+          }
+        );
+      });
+
+      this.mm.add('(max-width: 767px)', () => {
+        gsap.fromTo(
+          headerEl,
+          { y: 20, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: sectionEl,
+              start: 'top 90%',
+              end: 'top 60%',
+              scrub: 0.5
+            }
+          }
+        );
+
+        gsap.fromTo(
+          archCard,
+          {
+            scale: 0.94,
+            y: 30,
+            opacity: 0,
+            clipPath: 'inset(6% 4% 0% 4% round 999px 999px 16px 16px)',
+            force3D: true
+          },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: archCard,
+              start: 'top 92%',
+              end: 'top 45%',
+              scrub: 0.5
+            }
+          }
+        );
+
+        const staggerItems = rightCol.querySelectorAll<HTMLElement>('.feed-stagger-item');
+        gsap.fromTo(
+          staggerItems,
+          { y: 25, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: rightCol,
+              start: 'top 92%',
+              end: 'top 55%',
+              scrub: 0.5
+            }
+          }
+        );
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.mm?.revert();
+      this.mm = null;
+    });
+  }
 }

@@ -16,7 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
       <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-7xl mx-auto w-full">
-        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
+        <div #scrubHeader class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 opacity-0 gpu-animated">
           <div>
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-2">
               Matéria &amp; Luz
@@ -58,7 +58,10 @@ gsap.registerPlugin(ScrollTrigger);
 
           <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/65 via-onyx-graphite/15 to-transparent"></div>
 
-          <div class="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center gap-4 text-vanilla-bone gpu-animated">
+          <div
+            #scrubOverlayText
+            class="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center gap-4 text-vanilla-bone opacity-0 gpu-animated"
+          >
             <p class="font-editorial italic max-w-md mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-vanilla-bone">
               Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
             </p>
@@ -81,16 +84,16 @@ gsap.registerPlugin(ScrollTrigger);
           </div>
         </div>
 
-        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-center md:text-left mt-8 pt-6 border-t border-travertine">
-          <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5">
+        <div #scrubFooterBlock class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-center md:text-left mt-8 pt-6 border-t border-travertine">
+          <div class="scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 opacity-0 gpu-animated">
             <span class="font-editorial italic text-lg text-onyx-graphite">Acabamento Primoroso</span>
             <span class="text-xs text-mineral-taupe">Seleção cuidadosa em cada detalhe</span>
           </div>
-          <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5">
+          <div class="scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 opacity-0 gpu-animated">
             <span class="font-editorial italic text-lg text-onyx-graphite">Consultoria Direta</span>
             <span class="text-xs text-mineral-taupe">Vídeos reais das peças via WhatsApp</span>
           </div>
-          <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5">
+          <div class="scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 opacity-0 gpu-animated">
             <span class="font-editorial italic text-lg text-onyx-graphite">Envio Nacional</span>
             <span class="text-xs text-mineral-taupe">Atendimento para todo o Brasil</span>
           </div>
@@ -101,9 +104,12 @@ gsap.registerPlugin(ScrollTrigger);
 })
 export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
   @ViewChild('scrubSection') scrubSection!: ElementRef<HTMLElement>;
+  @ViewChild('scrubHeader') scrubHeader!: ElementRef<HTMLElement>;
   @ViewChild('scrubArchBox') scrubArchBox!: ElementRef<HTMLElement>;
   @ViewChild('scrubVideo') scrubVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('scrubOverlayText') scrubOverlayText!: ElementRef<HTMLElement>;
   @ViewChild('progressBar') progressBar!: ElementRef<HTMLElement>;
+  @ViewChild('scrubFooterBlock') scrubFooterBlock!: ElementRef<HTMLElement>;
 
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
 
@@ -113,11 +119,15 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
+      const sectionEl = this.scrubSection?.nativeElement;
+      const headerEl = this.scrubHeader?.nativeElement;
       const videoEl = this.scrubVideo?.nativeElement;
       const archBox = this.scrubArchBox?.nativeElement;
+      const overlayEl = this.scrubOverlayText?.nativeElement;
       const barEl = this.progressBar?.nativeElement;
+      const footerEl = this.scrubFooterBlock?.nativeElement;
 
-      if (!videoEl || !archBox || !barEl) return;
+      if (!sectionEl || !headerEl || !videoEl || !archBox || !overlayEl || !barEl || !footerEl) return;
 
       videoEl.muted = true;
       videoEl.disablePictureInPicture = true;
@@ -144,21 +154,83 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
 
       this.mm.add('(min-width: 768px)', () => {
         gsap.fromTo(
+          headerEl,
+          { y: 35, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: sectionEl,
+              start: 'top 85%',
+              end: 'top 50%',
+              scrub: 0.5
+            }
+          }
+        );
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: archBox,
+            start: 'top 85%',
+            end: 'center center',
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              setBarScale(self.progress);
+            }
+          }
+        });
+
+        tl.fromTo(
           archBox,
-          { scale: 0.88, force3D: true },
+          {
+            scale: 0.72,
+            y: 60,
+            clipPath: 'inset(14% 18% 0% 18% round 999px 999px 20px 20px)',
+            transformOrigin: 'center center',
+            force3D: true
+          },
           {
             scale: 1,
-            force3D: true,
+            y: 0,
+            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 20px 20px)',
+            ease: 'none',
+            force3D: true
+          },
+          0
+        );
+
+        tl.fromTo(
+          videoEl,
+          { scale: 1.25, force3D: true },
+          { scale: 1, ease: 'none', force3D: true },
+          0
+        );
+
+        tl.fromTo(
+          overlayEl,
+          { y: 25, opacity: 0, force3D: true },
+          { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
+          0.35
+        );
+
+        const footerItems = footerEl.querySelectorAll<HTMLElement>('.scrub-footer-item');
+        gsap.fromTo(
+          footerItems,
+          { y: 30, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.12,
             ease: 'power2.out',
+            force3D: true,
             scrollTrigger: {
-              trigger: archBox,
-              start: 'top 90%',
-              end: 'top 25%',
-              scrub: 0.6,
-              invalidateOnRefresh: true,
-              onUpdate: (self) => {
-                setBarScale(self.progress);
-              }
+              trigger: footerEl,
+              start: 'top 92%',
+              end: 'top 65%',
+              scrub: 0.5
             }
           }
         );
@@ -166,21 +238,83 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
 
       this.mm.add('(max-width: 767px)', () => {
         gsap.fromTo(
+          headerEl,
+          { y: 20, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: sectionEl,
+              start: 'top 90%',
+              end: 'top 60%',
+              scrub: 0.5
+            }
+          }
+        );
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: archBox,
+            start: 'top 90%',
+            end: 'center center',
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              setBarScale(self.progress);
+            }
+          }
+        });
+
+        tl.fromTo(
           archBox,
-          { scale: 0.94, force3D: true },
+          {
+            scale: 0.88,
+            y: 30,
+            clipPath: 'inset(8% 6% 0% 6% round 999px 999px 16px 16px)',
+            transformOrigin: 'center center',
+            force3D: true
+          },
           {
             scale: 1,
-            force3D: true,
+            y: 0,
+            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+            ease: 'none',
+            force3D: true
+          },
+          0
+        );
+
+        tl.fromTo(
+          videoEl,
+          { scale: 1.15, force3D: true },
+          { scale: 1, ease: 'none', force3D: true },
+          0
+        );
+
+        tl.fromTo(
+          overlayEl,
+          { y: 15, opacity: 0, force3D: true },
+          { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
+          0.3
+        );
+
+        const footerItems = footerEl.querySelectorAll<HTMLElement>('.scrub-footer-item');
+        gsap.fromTo(
+          footerItems,
+          { y: 20, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
             ease: 'power2.out',
+            force3D: true,
             scrollTrigger: {
-              trigger: archBox,
-              start: 'top 92%',
-              end: 'top 35%',
-              scrub: 0.5,
-              invalidateOnRefresh: true,
-              onUpdate: (self) => {
-                setBarScale(self.progress);
-              }
+              trigger: footerEl,
+              start: 'top 95%',
+              end: 'top 75%',
+              scrub: 0.5
             }
           }
         );

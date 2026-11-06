@@ -18,7 +18,7 @@ gsap.registerPlugin(ScrollTrigger);
 
       <div class="relative z-10 max-w-7xl mx-auto w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end mb-10 sm:mb-14">
-          <div class="lg:col-span-7 min-w-0">
+          <div #heroTitleBlock class="lg:col-span-7 min-w-0 opacity-0 gpu-animated">
             <p class="text-[11px] uppercase tracking-[0.22em] text-mineral-taupe mb-3 sm:mb-4">
               Alta Curadoria em Semijoias - Envio para todo o Brasil
             </p>
@@ -27,7 +27,7 @@ gsap.registerPlugin(ScrollTrigger);
             </h1>
           </div>
 
-          <div class="lg:col-span-5 flex flex-col items-start lg:items-end justify-end gap-5 min-w-0">
+          <div #heroActionBlock class="lg:col-span-5 flex flex-col items-start lg:items-end justify-end gap-5 min-w-0 opacity-0 gpu-animated">
             <p class="text-sm sm:text-base text-mineral-taupe leading-relaxed max-w-[40ch] lg:text-right">
               Peças selecionadas para iluminar a pele com delicadeza e atendimento individualizado para todo o país.
             </p>
@@ -95,6 +95,8 @@ gsap.registerPlugin(ScrollTrigger);
 })
 export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
   @ViewChild('heroSection') heroSection!: ElementRef<HTMLElement>;
+  @ViewChild('heroTitleBlock') heroTitleBlock!: ElementRef<HTMLElement>;
+  @ViewChild('heroActionBlock') heroActionBlock!: ElementRef<HTMLElement>;
   @ViewChild('archContainer') archContainer!: ElementRef<HTMLElement>;
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('archOverlayText') archOverlayText!: ElementRef<HTMLElement>;
@@ -112,11 +114,14 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
+      const sectionEl = this.heroSection?.nativeElement;
+      const titleEl = this.heroTitleBlock?.nativeElement;
+      const actionEl = this.heroActionBlock?.nativeElement;
       const videoEl = this.heroVideo?.nativeElement;
       const arch = this.archContainer?.nativeElement;
       const overlay = this.archOverlayText?.nativeElement;
 
-      if (!videoEl || !arch || !overlay) return;
+      if (!sectionEl || !titleEl || !actionEl || !videoEl || !arch || !overlay) return;
 
       videoEl.muted = true;
       videoEl.disablePictureInPicture = true;
@@ -136,62 +141,90 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
       );
       this.observer.observe(videoEl);
 
+      gsap.fromTo(
+        [titleEl, actionEl],
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: 0.12, force3D: true }
+      );
+
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       this.mm = gsap.matchMedia();
 
       this.mm.add('(min-width: 768px)', () => {
-        gsap.fromTo(
-          arch,
-          { scale: 0.88, force3D: true },
-          {
-            scale: 1,
-            force3D: true,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: arch,
-              start: 'top 88%',
-              end: 'top 20%',
-              scrub: 0.6,
-              invalidateOnRefresh: true
-            }
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionEl,
+            start: 'top top',
+            end: 'bottom 50%',
+            scrub: 0.6,
+            invalidateOnRefresh: true
           }
+        });
+
+        tl.fromTo(
+          arch,
+          {
+            clipPath: 'inset(8% 12% 0% 12% round 999px 999px 16px 16px)',
+            scale: 0.92,
+            force3D: true
+          },
+          {
+            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+            scale: 1,
+            ease: 'none',
+            force3D: true
+          },
+          0
         );
 
-        gsap.fromTo(
+        tl.fromTo(
+          videoEl,
+          { scale: 1.22, yPercent: -5, force3D: true },
+          { scale: 1, yPercent: 5, ease: 'none', force3D: true },
+          0
+        );
+
+        tl.fromTo(
           overlay,
-          { y: 18, opacity: 0.85, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            force3D: true,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: arch,
-              start: 'top 85%',
-              end: 'top 25%',
-              scrub: 0.6
-            }
-          }
+          { y: 20, opacity: 0.8, force3D: true },
+          { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
+          0.1
         );
       });
 
       this.mm.add('(max-width: 767px)', () => {
-        gsap.fromTo(
-          arch,
-          { scale: 0.94, force3D: true },
-          {
-            scale: 1,
-            force3D: true,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: arch,
-              start: 'top 92%',
-              end: 'top 30%',
-              scrub: 0.5,
-              invalidateOnRefresh: true
-            }
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: arch,
+            start: 'top 92%',
+            end: 'top 30%',
+            scrub: 0.5,
+            invalidateOnRefresh: true
           }
+        });
+
+        tl.fromTo(
+          arch,
+          {
+            clipPath: 'inset(4% 4% 0% 4% round 999px 999px 16px 16px)',
+            scale: 0.95,
+            force3D: true
+          },
+          {
+            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+            scale: 1,
+            ease: 'none',
+            force3D: true
+          },
+          0
+        );
+
+        tl.fromTo(
+          videoEl,
+          { scale: 1.15, yPercent: -3, force3D: true },
+          { scale: 1, yPercent: 3, ease: 'none', force3D: true },
+          0
         );
       });
     });

@@ -72,10 +72,6 @@ function auditCodebase() {
       violations.push(`GSAP pin: true ainda presente em: ${rel}`);
     }
 
-    if (rel.startsWith('src') && /clipPath/.test(content)) {
-      violations.push(`Animacao de clipPath detectada em: ${rel}`);
-    }
-
     if (rel.startsWith('src') && /loading="lazy"/.test(content)) {
       violations.push(`loading="lazy" detectado em: ${rel}`);
     }

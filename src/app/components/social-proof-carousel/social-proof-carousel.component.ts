@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, signal } from '@angular/core';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
 import reviewsData from '../../../assets/data/reviews.json';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export interface VerifiedReview {
   author: string;
@@ -15,11 +19,11 @@ export interface VerifiedReview {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="avaliacoes" class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
+    <section id="avaliacoes" #reviewsSection class="relative w-full max-w-full overflow-hidden py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-vanilla-bone border-t border-travertine">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-7xl mx-auto w-full">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+        <div #reviewsHeader class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 opacity-0 gpu-animated">
           <div class="min-w-0">
             <div class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-soft-linen border border-travertine mb-5 max-w-full">
               <div class="flex items-center gap-0.5 text-onyx-graphite shrink-0">
@@ -54,7 +58,7 @@ export interface VerifiedReview {
           </a>
         </div>
 
-        <div class="relative z-10 overflow-hidden w-full">
+        <div #marqueeContainer class="relative z-10 overflow-hidden w-full opacity-0 gpu-animated">
           <div class="animate-marquee-left gap-4 sm:gap-6 py-1">
             <article
               *ngFor="let rev of marqueeReviews()"
@@ -82,7 +86,11 @@ export interface VerifiedReview {
     </section>
   `
 })
-export class SocialProofCarouselComponent {
+export class SocialProofCarouselComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('reviewsSection') reviewsSection!: ElementRef<HTMLElement>;
+  @ViewChild('reviewsHeader') reviewsHeader!: ElementRef<HTMLElement>;
+  @ViewChild('marqueeContainer') marqueeContainer!: ElementRef<HTMLElement>;
+
   readonly rating = signal<number>(reviewsData.rating || 4.9);
   readonly totalReviews = signal<number>(reviewsData.totalReviews || 199);
   readonly mapsUrl = signal<string>(
@@ -95,4 +103,101 @@ export class SocialProofCarouselComponent {
     ...this.realReviews,
     ...this.realReviews
   ]);
+
+  private mm: gsap.MatchMedia | null = null;
+
+  constructor(private ngZone: NgZone) {}
+
+  ngAfterViewInit(): void {
+    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    this.ngZone.runOutsideAngular(() => {
+      const sectionEl = this.reviewsSection?.nativeElement;
+      const headerEl = this.reviewsHeader?.nativeElement;
+      const marqueeEl = this.marqueeContainer?.nativeElement;
+
+      if (!sectionEl || !headerEl || !marqueeEl) return;
+
+      this.mm = gsap.matchMedia();
+
+      this.mm.add('(min-width: 768px)', () => {
+        gsap.fromTo(
+          headerEl,
+          { y: 40, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: sectionEl,
+              start: 'top 85%',
+              end: 'top 45%',
+              scrub: 0.5
+            }
+          }
+        );
+
+        gsap.fromTo(
+          marqueeEl,
+          { y: 40, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: marqueeEl,
+              start: 'top 90%',
+              end: 'top 55%',
+              scrub: 0.5
+            }
+          }
+        );
+      });
+
+      this.mm.add('(max-width: 767px)', () => {
+        gsap.fromTo(
+          headerEl,
+          { y: 25, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: sectionEl,
+              start: 'top 90%',
+              end: 'top 60%',
+              scrub: 0.5
+            }
+          }
+        );
+
+        gsap.fromTo(
+          marqueeEl,
+          { y: 25, opacity: 0, force3D: true },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'power2.out',
+            force3D: true,
+            scrollTrigger: {
+              trigger: marqueeEl,
+              start: 'top 92%',
+              end: 'top 65%',
+              scrub: 0.5
+            }
+          }
+        );
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.mm?.revert();
+      this.mm = null;
+    });
+  }
 }
