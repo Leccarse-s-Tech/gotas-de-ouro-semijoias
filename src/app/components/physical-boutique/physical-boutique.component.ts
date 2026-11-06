@@ -60,7 +60,7 @@ import reviewsData from '../../../assets/data/reviews.json';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.24"
-                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate"
+                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                   <span>Traçar rota no Google Maps</span>
@@ -76,7 +76,7 @@ import reviewsData from '../../../assets/data/reviews.json';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate"
+                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner whitespace-nowrap">Atendimento Exclusivo</span>
               </a>
@@ -87,10 +87,10 @@ import reviewsData from '../../../assets/data/reviews.json';
             <div class="sm:col-span-7 border border-[#D8D3C8] bg-vanilla-bone p-3 rounded-2xl">
               <div class="overflow-hidden rounded-xl">
                 <img
-                  src="assets/editorial/fachada-editorial-1.jpg"
+                  src="assets/editorial/fachada-editorial-1.webp"
                   alt="Boutique fisica Gotas de Ouro Semijoias"
-                  class="w-full aspect-[16/10] object-cover"
-                  loading="lazy"
+                  class="w-full aspect-[16/10] object-cover gpu-animated"
+                  loading="eager"
                   decoding="async"
                 />
               </div>
@@ -100,13 +100,13 @@ import reviewsData from '../../../assets/data/reviews.json';
               </div>
             </div>
 
-            <div class="sm:col-span-5 arch-mask-frame border border-[#D8D3C8] bg-vanilla-bone p-3">
-              <div class="overflow-hidden rounded-t-[500px]">
+            <div class="sm:col-span-5 rounded-t-full overflow-hidden border border-[#D8D3C8] bg-vanilla-bone p-3">
+              <div class="overflow-hidden rounded-t-full">
                 <img
-                  src="assets/editorial/fachada-editorial-2.jpg"
+                  src="assets/editorial/fachada-editorial-2.webp"
                   alt="Entrada da boutique fisica Gotas de Ouro"
-                  class="w-full aspect-[3/4] object-cover"
-                  loading="lazy"
+                  class="w-full aspect-[3/4] object-cover gpu-animated"
+                  loading="eager"
                   decoding="async"
                 />
               </div>

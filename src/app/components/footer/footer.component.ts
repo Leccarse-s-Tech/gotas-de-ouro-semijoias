@@ -19,7 +19,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
               src="assets/editorial/logo-gotas-de-ouro.svg"
               alt="Gotas de Ouro Semijoias"
               class="h-16 w-auto object-contain -ml-2"
-              loading="lazy"
+              loading="eager"
               decoding="async"
             />
             <p class="mt-4 text-sm text-mineral-taupe max-w-[40ch] leading-relaxed">
@@ -70,7 +70,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.22"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs font-medium tracking-[0.03em] hover:bg-celadon-slate"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner whitespace-nowrap">Atendimento Exclusivo</span>
               </a>
@@ -81,7 +81,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs font-medium hover:border-celadon-slate"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs font-medium hover:border-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner whitespace-nowrap">Instagram Oficial</span>
               </a>
@@ -103,7 +103,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
       appMagneticSpring
       [magneticStrength]="0.32"
       aria-label="Atendimento Exclusivo via WhatsApp"
-      class="fixed bottom-6 right-6 z-40 inline-flex items-center gap-3 px-5 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8] hover:bg-celadon-slate"
+      class="fixed bottom-6 right-6 z-40 inline-flex items-center gap-3 px-5 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-[#D8D3C8] hover:bg-celadon-slate gpu-animated"
     >
       <span class="magnetic-inner inline-flex items-center gap-2.5">
         <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">

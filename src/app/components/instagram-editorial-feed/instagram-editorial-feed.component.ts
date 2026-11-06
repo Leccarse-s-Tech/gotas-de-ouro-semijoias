@@ -28,7 +28,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
             rel="noopener noreferrer"
             appMagneticSpring
             [magneticStrength]="0.24"
-            class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone self-start md:self-auto"
+            class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone self-start md:self-auto gpu-animated"
           >
             <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -49,20 +49,20 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
             [href]="instagramReelUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="lg:col-span-5 group relative arch-mask-frame border border-[#D8D3C8] bg-soft-linen p-3 flex flex-col justify-between"
+            class="lg:col-span-5 group relative rounded-t-full overflow-hidden border border-[#D8D3C8] bg-soft-linen p-3 flex flex-col justify-between"
           >
-            <div class="relative overflow-hidden rounded-t-[500px] aspect-[4/5] bg-onyx-graphite">
+            <div class="relative overflow-hidden rounded-t-full aspect-[4/5] bg-onyx-graphite">
               <video
                 #linenVideo
                 src="assets/editorial/linen-macro-video.webm"
-                poster="assets/editorial/joia-4-editorial.jpg"
+                poster="assets/editorial/joia-4-editorial.webp"
                 preload="metadata"
                 autoplay
                 muted
                 loop
                 playsinline
                 disablePictureInPicture
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover gpu-animated"
               ></video>
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/50 via-transparent to-transparent"></div>
               <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-vanilla-bone text-xs">
@@ -85,10 +85,10 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
             >
               <div class="overflow-hidden rounded-xl aspect-[16/11]">
                 <img
-                  src="assets/editorial/editorial-macro-frame-2.jpg"
+                  src="assets/editorial/editorial-macro-frame-2.webp"
                   alt="Composição delicada de semijoias Gotas de Ouro"
-                  class="w-full h-full object-cover"
-                  loading="lazy"
+                  class="w-full h-full object-cover gpu-animated"
+                  loading="eager"
                   decoding="async"
                 />
               </div>
@@ -106,10 +106,10 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
             >
               <div class="overflow-hidden rounded-xl aspect-[16/11]">
                 <img
-                  src="assets/editorial/editorial-macro-frame-3.jpg"
+                  src="assets/editorial/editorial-macro-frame-3.webp"
                   alt="Detalhe de semijoia selecionada Gotas de Ouro"
-                  class="w-full h-full object-cover"
-                  loading="lazy"
+                  class="w-full h-full object-cover gpu-animated"
+                  loading="eager"
                   decoding="async"
                 />
               </div>
@@ -134,7 +134,7 @@ import { MagneticSpringDirective } from '../../directives/magnetic-spring.direct
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.25"
-                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate shrink-0 self-start sm:self-auto"
+                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate shrink-0 self-start sm:self-auto gpu-animated"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>

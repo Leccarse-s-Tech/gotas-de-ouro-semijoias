@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MagneticSpringDirective],
   template: `
-    <section id="topo" #heroSection class="relative bg-vanilla-bone overflow-hidden">
+    <section id="topo" #heroSection class="relative bg-vanilla-bone">
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8 pt-24 pb-10">
@@ -38,7 +38,7 @@ gsap.registerPlugin(ScrollTrigger);
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.28"
-                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate"
+                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2.5 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>
@@ -53,7 +53,7 @@ gsap.registerPlugin(ScrollTrigger);
                 (click)="scrollToCollections($event)"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-soft-linen text-onyx-graphite text-[13px] font-medium hover:border-celadon-slate"
+                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-soft-linen text-onyx-graphite text-[13px] font-medium hover:border-celadon-slate gpu-animated"
               >
                 <span class="magnetic-inner whitespace-nowrap">Explorar Acervo</span>
               </a>
@@ -62,33 +62,35 @@ gsap.registerPlugin(ScrollTrigger);
         </div>
       </div>
 
-      <div #archPinWrapper class="relative w-full min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 pt-20 pb-6">
-        <div
-          #archContainer
-          class="relative w-full max-w-[1400px] h-[80dvh] sm:h-[84dvh] border border-travertine bg-travertine/40 overflow-hidden"
-        >
-          <video
-            #heroVideo
-            src="assets/editorial/hero-arch-video.webm"
-            poster="assets/editorial/editorial-macro-frame-2.jpg"
-            preload="metadata"
-            autoplay
-            muted
-            loop
-            playsinline
-            disablePictureInPicture
-            class="w-full h-full object-cover"
-          ></video>
-
-          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/55 via-transparent to-transparent"></div>
-
+      <div #archScrollTrack class="relative h-[200vh] w-full">
+        <div class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center px-4 sm:px-8 pt-20 pb-6">
           <div
-            #archOverlayText
-            class="absolute inset-x-0 bottom-8 sm:bottom-12 px-6 flex flex-col items-center justify-center text-center text-vanilla-bone"
+            #archContainer
+            class="relative w-full max-w-[1400px] h-[80vh] sm:h-[84vh] rounded-t-full border border-travertine bg-travertine/40 overflow-hidden gpu-animated"
           >
-            <p class="font-editorial italic text-xl sm:text-2xl leading-[1.2] max-w-[38ch] text-vanilla-bone">
-              Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
-            </p>
+            <video
+              #heroVideo
+              src="assets/editorial/hero-arch-video.webm"
+              poster="assets/editorial/editorial-macro-frame-2.webp"
+              preload="metadata"
+              autoplay
+              muted
+              loop
+              playsinline
+              disablePictureInPicture
+              class="w-full h-full object-cover gpu-animated"
+            ></video>
+
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/55 via-transparent to-transparent"></div>
+
+            <div
+              #archOverlayText
+              class="absolute inset-x-0 bottom-8 sm:bottom-12 px-6 flex flex-col items-center justify-center text-center text-vanilla-bone gpu-animated"
+            >
+              <p class="font-editorial italic text-xl sm:text-2xl leading-[1.2] max-w-[38ch] text-vanilla-bone">
+                Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -97,7 +99,7 @@ gsap.registerPlugin(ScrollTrigger);
 })
 export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
   @ViewChild('heroSection') heroSection!: ElementRef<HTMLElement>;
-  @ViewChild('archPinWrapper') archPinWrapper!: ElementRef<HTMLElement>;
+  @ViewChild('archScrollTrack') archScrollTrack!: ElementRef<HTMLElement>;
   @ViewChild('archContainer') archContainer!: ElementRef<HTMLElement>;
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('archOverlayText') archOverlayText!: ElementRef<HTMLElement>;
@@ -117,10 +119,10 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       const videoEl = this.heroVideo?.nativeElement;
       const arch = this.archContainer?.nativeElement;
-      const wrapper = this.archPinWrapper?.nativeElement;
+      const track = this.archScrollTrack?.nativeElement;
       const overlay = this.archOverlayText?.nativeElement;
 
-      if (!videoEl || !arch || !wrapper || !overlay) return;
+      if (!videoEl || !arch || !track || !overlay) return;
 
       videoEl.muted = true;
       videoEl.disablePictureInPicture = true;
@@ -130,7 +132,7 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
           const entry = entries[0];
           const isVisible = Boolean(entry?.isIntersecting);
           if (isVisible) {
-            arch.style.willChange = 'clip-path';
+            arch.style.willChange = 'transform';
             videoEl.style.willChange = 'transform';
             videoEl.play().catch(() => {});
           } else {
@@ -141,27 +143,27 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
         },
         { rootMargin: '150px 0px' }
       );
-      this.observer.observe(wrapper);
+      this.observer.observe(track);
 
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       this.ctx = gsap.context(() => {
         gsap.set(arch, {
-          clipPath: 'inset(6% 22% 4% 22% round 999px 999px 0px 0px)'
+          scale: 0.75,
+          force3D: true
         });
 
         gsap.set(videoEl, {
-          scale: 1.15,
+          scale: 1.2,
           force3D: true
         });
 
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: wrapper,
+            trigger: track,
             start: 'top top',
-            end: '+=105%',
-            pin: true,
-            scrub: 0.6,
+            end: 'bottom bottom',
+            scrub: 0.8,
             invalidateOnRefresh: true
           }
         });
@@ -169,7 +171,8 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
         tl.to(
           arch,
           {
-            clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)',
+            scale: 1,
+            force3D: true,
             ease: 'power2.out',
             duration: 1
           },
@@ -189,8 +192,8 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
 
         tl.fromTo(
           overlay,
-          { y: 16, opacity: 0.75, force3D: true },
-          { y: 0, opacity: 1, force3D: true, ease: 'power2.out', duration: 0.8 },
+          { yPercent: 18, opacity: 0.72, force3D: true },
+          { yPercent: 0, opacity: 1, force3D: true, ease: 'power2.out', duration: 0.8 },
           0.1
         );
       }, this.heroSection.nativeElement);

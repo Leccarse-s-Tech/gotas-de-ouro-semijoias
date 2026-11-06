@@ -10,7 +10,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
   imports: [CommonModule, MagneticSpringDirective],
   template: `
     <header
-      class="fixed top-0 left-0 right-0 z-40 border-b"
+      class="fixed top-0 left-0 right-0 z-40 border-b gpu-animated"
       [ngClass]="scrollService.isScrolled() ? 'bg-vanilla-bone border-travertine py-3' : 'bg-vanilla-bone/95 border-travertine/60 py-4'"
     >
       <div class="max-w-[1400px] mx-auto px-4 sm:px-8 h-12 flex items-center justify-between gap-4">
@@ -23,6 +23,8 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
           <img
             src="assets/editorial/logo-symbol.svg"
             alt="Simbolo Gotas de Ouro"
+            loading="eager"
+            decoding="async"
             class="w-7 h-5 sm:w-9 sm:h-7 object-contain shrink-0"
           />
           <div class="flex flex-col">
@@ -92,7 +94,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
             rel="noopener noreferrer"
             appMagneticSpring
             [magneticStrength]="0.24"
-            class="inline-flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[11px] sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate"
+            class="inline-flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-[11px] sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated"
           >
             <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
               <span>Atendimento Exclusivo</span>

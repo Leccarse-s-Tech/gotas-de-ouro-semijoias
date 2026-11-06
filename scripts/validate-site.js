@@ -64,6 +64,26 @@ function auditCodebase() {
       violations.push(`feTurbulence detectado em: ${rel}`);
     }
 
+    if (rel.startsWith('src') && /\bLenis\b/.test(content)) {
+      violations.push(`Lenis ainda presente em: ${rel}`);
+    }
+
+    if (rel.startsWith('src') && /pin:\s*true/.test(content)) {
+      violations.push(`GSAP pin: true ainda presente em: ${rel}`);
+    }
+
+    if (rel.startsWith('src') && /clipPath/.test(content)) {
+      violations.push(`Animacao de clipPath detectada em: ${rel}`);
+    }
+
+    if (rel.startsWith('src') && /loading="lazy"/.test(content)) {
+      violations.push(`loading="lazy" detectado em: ${rel}`);
+    }
+
+    if (rel === path.join('src', 'styles.css') && /scroll-behavior:\s*smooth/.test(content)) {
+      violations.push(`scroll-behavior: smooth detectado em: ${rel}`);
+    }
+
     if (rel.endsWith('.component.ts') && !content.includes('ChangeDetectionStrategy.OnPush')) {
       violations.push(`Componente sem OnPush: ${rel}`);
     }
@@ -85,11 +105,18 @@ function auditCodebase() {
   }
 
   const editorialDir = path.join(__dirname, '..', 'src', 'assets', 'editorial');
-  ['brand-deboss-box.jpg', 'brand-limestone-plaque.jpg'].forEach(fakeImg => {
-    if (fs.existsSync(path.join(editorialDir, fakeImg))) {
-      violations.push(`Imagem falsa nao removida: ${fakeImg}`);
+  for (const f of fs.readdirSync(editorialDir)) {
+    const ext = path.extname(f).toLowerCase();
+    if (ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
+      violations.push(`Imagem nao convertida para WebP: ${f}`);
     }
-  });
+    if (ext === '.webp') {
+      const sizeKb = fs.statSync(path.join(editorialDir, f)).size / 1024;
+      if (sizeKb > 250) {
+        violations.push(`Imagem WebP acima de 250KB: ${f} (${sizeKb.toFixed(1)} KB)`);
+      }
+    }
+  }
 
   console.log('Arquivos auditados:', allFiles.length);
   console.log('Violacoes de codigo encontradas:', violations.length);
@@ -128,7 +155,10 @@ async function validateBrowser() {
   await desktopPage.waitForTimeout(700);
   await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-collections.jpg'), quality: 90 });
 
-  await desktopPage.evaluate(() => document.querySelector('#atelier-filme')?.scrollIntoView());
+  await desktopPage.evaluate(() => {
+    const el = document.querySelector('#atelier-filme');
+    if (el) window.scrollTo(0, el.offsetTop + 450);
+  });
   await desktopPage.waitForTimeout(700);
   await desktopPage.screenshot({ path: path.join(SCRATCH_DIR, 'desktop-scrub.jpg'), quality: 90 });
 

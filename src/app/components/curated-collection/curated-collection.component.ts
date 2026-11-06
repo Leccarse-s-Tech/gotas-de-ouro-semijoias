@@ -41,23 +41,23 @@ export interface EditorialPiece {
           <article
             *ngFor="let piece of pieces()"
             [ngClass]="piece.layoutClass"
-            class="collection-item group relative"
+            class="collection-item group relative gpu-animated"
           >
             <div
               appMagneticSpring
               [magneticStrength]="0.06"
-              class="showcase-elastic-frame relative border border-[#D8D3C8] bg-soft-linen p-3 sm:p-4 hover:border-celadon-slate"
-              [ngClass]="piece.archTop ? 'arch-mask-frame' : 'rounded-2xl'"
+              class="relative border border-[#D8D3C8] bg-soft-linen p-3 sm:p-4 hover:border-celadon-slate gpu-animated"
+              [ngClass]="piece.archTop ? 'rounded-t-full overflow-hidden' : 'rounded-2xl overflow-hidden'"
             >
               <div
                 class="relative overflow-hidden bg-travertine/30"
-                [ngClass]="[piece.aspectClass, piece.archTop ? 'rounded-t-[500px]' : 'rounded-xl']"
+                [ngClass]="[piece.aspectClass, piece.archTop ? 'rounded-t-full' : 'rounded-xl']"
               >
                 <img
                   [src]="piece.image"
                   [alt]="piece.alt"
-                  class="collection-photo w-full h-full object-cover"
-                  loading="lazy"
+                  class="collection-photo w-full h-full object-cover gpu-animated"
+                  loading="eager"
                   decoding="async"
                 />
 
@@ -95,7 +95,7 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
     {
       id: 'peca-01',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 01',
-      image: 'assets/editorial/joia-1-editorial.jpg',
+      image: 'assets/editorial/joia-1-editorial.webp',
       layoutClass: 'md:col-span-7',
       aspectClass: 'aspect-[4/5]',
       archTop: true
@@ -103,7 +103,7 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
     {
       id: 'peca-02',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 02',
-      image: 'assets/editorial/joia-2-editorial.jpg',
+      image: 'assets/editorial/joia-2-editorial.webp',
       layoutClass: 'md:col-span-5 md:mt-24',
       aspectClass: 'aspect-[4/5]',
       archTop: false
@@ -111,7 +111,7 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
     {
       id: 'peca-03',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 03',
-      image: 'assets/editorial/joia-3-editorial.jpg',
+      image: 'assets/editorial/joia-3-editorial.webp',
       layoutClass: 'md:col-span-5',
       aspectClass: 'aspect-[4/5]',
       archTop: false
@@ -119,7 +119,7 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
     {
       id: 'peca-04',
       alt: 'Semijoia selecionada Gotas de Ouro - Fotografia Editorial 04',
-      image: 'assets/editorial/joia-4-editorial.jpg',
+      image: 'assets/editorial/joia-4-editorial.webp',
       layoutClass: 'md:col-span-7 md:mt-16',
       aspectClass: 'aspect-[4/5]',
       archTop: true
@@ -134,19 +134,38 @@ export class CuratedCollectionComponent implements AfterViewInit, OnDestroy {
         const items = gsap.utils.toArray<HTMLElement>('.collection-item');
         items.forEach((item, idx) => {
           const photo = item.querySelector<HTMLElement>('.collection-photo');
+          gsap.fromTo(
+            item,
+            { yPercent: 6, force3D: true },
+            {
+              yPercent: 0,
+              force3D: true,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top 95%',
+                end: 'top 30%',
+                scrub: 1 + (idx % 2) * 0.2,
+                onToggle: (self) => {
+                  item.style.willChange = self.isActive ? 'transform' : 'auto';
+                }
+              }
+            }
+          );
+
           if (photo) {
             gsap.fromTo(
               photo,
-              { scale: 1.12, force3D: true },
+              { scale: 1.14, force3D: true },
               {
                 scale: 1,
                 force3D: true,
                 ease: 'power2.out',
                 scrollTrigger: {
                   trigger: item,
-                  start: 'top 92%',
+                  start: 'top 95%',
                   end: 'bottom 20%',
-                  scrub: 0.6 + (idx % 2) * 0.15,
+                  scrub: 1,
                   onToggle: (self) => {
                     photo.style.willChange = self.isActive ? 'transform' : 'auto';
                   }
