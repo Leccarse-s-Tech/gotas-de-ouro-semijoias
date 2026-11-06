@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --vanilla-bone: #F3F2D9;
+  --soft-linen: #F1F1EA;
+  --travertine: #D8D3C8;
+  --mineral-taupe: #8A857B;
+  --celadon-slate: #525A56;
+  --onyx-graphite: #1E1E1C;
+  --scroll-stretch-y: 1;
+  --scroll-shift-y: 0px;
+  --scroll-skew-y: 0deg;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background-color: #F3F2D9;
+  color: #1E1E1C;
+  font-family: 'Manrope', sans-serif;
+  overflow-x: hidden;
+}
+
+.font-editorial {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.elastic-scroll-target {
+  transform: translate3d(0, var(--scroll-shift-y, 0px), 0) scaleY(var(--scroll-stretch-y, 1)) skewY(var(--scroll-skew-y, 0deg));
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.arch-mask-frame {
+  border-radius: 999px 999px 0 0;
+  overflow: hidden;
+  will-change: transform, border-radius, clip-path;
+}
+
+.texture-surface-linen {
+  background-image: url('/assets/editorial/texture-linen.jpg');
+  background-size: 640px auto;
+  background-repeat: repeat;
+}
+
+.texture-surface-travertine {
+  background-image: url('/assets/editorial/texture-travertine.jpg');
+  background-size: 720px auto;
+  background-repeat: repeat;
+}
+
+.hairline-border {
+  border-color: #D8D3C8;
+}
+
+@keyframes marqueeLeft {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marqueeRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 68s linear infinite;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 74s linear infinite;
+}
+
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elastic-scroll-target {
+    transform: none !important;
+  }
+  .animate-marquee-left,
+  .animate-marquee-right {
+    animation: none !important;
+  }
+}
