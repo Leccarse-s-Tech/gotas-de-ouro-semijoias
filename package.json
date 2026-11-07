@@ -6,6 +6,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:ghpages": "node scripts/build-ghpages.js",
+    "deploy:ghpages": "node scripts/deploy-ghpages.js",
     "inspect:refs": "node scripts/inspect-references.js",
     "scrape:reviews": "node scripts/scrape-reviews.js",
     "generate:assets": "node scripts/generate-assets.js"

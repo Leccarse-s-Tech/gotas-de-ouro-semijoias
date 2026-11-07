@@ -32,7 +32,7 @@ body {
 }
 
 .noise-gpu-layer {
-  background-image: url('/assets/editorial/noise-tile.webp');
+  background-image: url('assets/editorial/noise-tile.webp');
   background-repeat: repeat;
   background-size: 150px 150px;
   opacity: 0.035;
@@ -50,7 +50,7 @@ body {
 }
 
 .texture-surface-linen {
-  background-image: url('/assets/editorial/texture-linen.webp');
+  background-image: url('assets/editorial/texture-linen.webp');
   background-size: 640px auto;
   background-repeat: repeat;
   mix-blend-mode: normal;
@@ -60,7 +60,7 @@ body {
 }
 
 .texture-surface-travertine {
-  background-image: url('/assets/editorial/texture-travertine.webp');
+  background-image: url('assets/editorial/texture-travertine.webp');
   background-size: 720px auto;
   background-repeat: repeat;
   mix-blend-mode: normal;
