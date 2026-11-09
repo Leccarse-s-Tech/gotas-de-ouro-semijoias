@@ -60,7 +60,6 @@ gsap.registerPlugin(ScrollTrigger);
 
           <div #manifestoPillarsBlock class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
             <div class="manifesto-pillar-item flex flex-col gap-2 min-w-0 opacity-0 gpu-animated">
-              <span class="text-[11px] uppercase tracking-[0.22em] text-celadon-slate">01</span>
               <h3 class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">
                 Acabamento Primoroso
               </h3>
@@ -70,7 +69,6 @@ gsap.registerPlugin(ScrollTrigger);
             </div>
 
             <div class="manifesto-pillar-item flex flex-col gap-2 lg:border-l lg:border-travertine lg:pl-8 min-w-0 opacity-0 gpu-animated">
-              <span class="text-[11px] uppercase tracking-[0.22em] text-celadon-slate">02</span>
               <h3 class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">
                 Olhar Consultivo
               </h3>
@@ -80,7 +78,6 @@ gsap.registerPlugin(ScrollTrigger);
             </div>
 
             <div class="manifesto-pillar-item flex flex-col gap-2 lg:border-l lg:border-travertine lg:pl-8 min-w-0 opacity-0 gpu-animated">
-              <span class="text-[11px] uppercase tracking-[0.22em] text-celadon-slate">03</span>
               <h3 class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">
                 Alcance Nacional
               </h3>

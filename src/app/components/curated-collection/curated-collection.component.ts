@@ -28,7 +28,7 @@ export interface EditorialPiece {
             Acervo Autoral
           </p>
           <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-onyx-graphite">
-            Quatro estudos sobre <span class="italic font-light leading-[1.1] pb-1 inline-block">luz e superfície.</span>
+            Fotos sob <span class="italic font-light leading-[1.1] pb-1 inline-block">luz e superfície.</span>
           </h2>
           <p class="mt-4 text-sm sm:text-base text-mineral-taupe leading-relaxed max-w-[58ch]">
             Nosso acervo é apresentado como uma galeria viva. Sem carrinhos automatizados: cada peça é apresentada individualmente por nossa equipe via WhatsApp.

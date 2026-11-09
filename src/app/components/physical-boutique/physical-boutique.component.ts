@@ -19,10 +19,6 @@ gsap.registerPlugin(ScrollTrigger);
       <div class="relative z-10 w-full max-w-7xl 2xl:max-w-[1600px] mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div #boutiqueTextBlock class="min-w-0 opacity-0 gpu-animated">
-            <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3">
-              Nossa Boutique Física &amp; Envio Nacional
-            </p>
-
             <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-onyx-graphite">
               Presença física sólida, <span class="italic font-light leading-[1.1] pb-1 inline-block">alcance em todo o Brasil.</span>
             </h2>

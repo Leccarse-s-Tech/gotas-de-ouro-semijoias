@@ -19,9 +19,6 @@ gsap.registerPlugin(ScrollTrigger);
       <div class="relative z-10 w-full max-w-full xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end mb-10 sm:mb-14">
           <div #heroTitleBlock class="lg:col-span-7 min-w-0 opacity-0 gpu-animated">
-            <p class="text-[11px] uppercase tracking-[0.22em] text-mineral-taupe mb-3 sm:mb-4">
-              Alta Curadoria em Semijoias - Envio para todo o Brasil
-            </p>
             <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl xl:text-[68px] leading-[1.06] tracking-tight text-onyx-graphite font-normal">
               A poesia da matéria em <span class="italic font-light leading-[1.1] pb-1 inline-block">formas eternas.</span>
             </h1>
