@@ -1,5 +1,6 @@
-import { AfterViewInit, Directive, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, NgZone, OnDestroy, effect, inject } from '@angular/core';
 import gsap from 'gsap';
+import { MotionPreferenceService } from '../services/motion-preference.service';
 
 @Directive({
   selector: '[appMagneticSpring]',
@@ -9,10 +10,16 @@ export class MagneticSpringDirective implements AfterViewInit, OnDestroy {
   @Input() magneticStrength = 0.28;
   @Input() magneticInnerSelector = '.magnetic-inner';
 
+  private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly ngZone = inject(NgZone);
+  private readonly motionService = inject(MotionPreferenceService);
+
   private xTo: gsap.QuickToFunc | null = null;
   private yTo: gsap.QuickToFunc | null = null;
   private innerXTo: gsap.QuickToFunc | null = null;
   private innerYTo: gsap.QuickToFunc | null = null;
+  private viewInitialized = false;
+  private listenersAttached = false;
 
   private readonly handleMouseEnter = (): void => {
     this.el.nativeElement.style.willChange = 'transform';
@@ -39,16 +46,28 @@ export class MagneticSpringDirective implements AfterViewInit, OnDestroy {
     node.style.willChange = 'auto';
   };
 
-  constructor(
-    private el: ElementRef<HTMLElement>,
-    private ngZone: NgZone
-  ) {}
+  constructor() {
+    effect(() => {
+      const reduced = this.motionService.prefersReducedMotion();
+      if (!this.viewInitialized) return;
+      if (reduced) {
+        this.disableSpring();
+      } else {
+        this.enableSpring();
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
-    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return;
+    this.viewInitialized = true;
+    if (typeof window === 'undefined') return;
+    if (!this.motionService.prefersReducedMotion()) {
+      this.enableSpring();
     }
+  }
 
+  private enableSpring(): void {
+    if (this.listenersAttached) return;
     this.ngZone.runOutsideAngular(() => {
       const node = this.el.nativeElement;
       this.xTo = gsap.quickTo(node, 'x', { duration: 0.4, ease: 'power3.out' });
@@ -63,21 +82,35 @@ export class MagneticSpringDirective implements AfterViewInit, OnDestroy {
       node.addEventListener('mouseenter', this.handleMouseEnter, { passive: true });
       node.addEventListener('mousemove', this.handleMouseMove, { passive: true });
       node.addEventListener('mouseleave', this.handleMouseLeave, { passive: true });
+      this.listenersAttached = true;
+    });
+  }
+
+  private disableSpring(): void {
+    this.ngZone.runOutsideAngular(() => {
+      const node = this.el.nativeElement;
+      if (this.listenersAttached) {
+        node.removeEventListener('mouseenter', this.handleMouseEnter);
+        node.removeEventListener('mousemove', this.handleMouseMove);
+        node.removeEventListener('mouseleave', this.handleMouseLeave);
+        this.listenersAttached = false;
+      }
+      this.xTo = null;
+      this.yTo = null;
+      this.innerXTo = null;
+      this.innerYTo = null;
+      node.style.willChange = 'auto';
+      gsap.killTweensOf(node);
+      gsap.set(node, { clearProps: 'x,y,transform' });
+      const inner = node.querySelector<HTMLElement>(this.magneticInnerSelector);
+      if (inner) {
+        gsap.killTweensOf(inner);
+        gsap.set(inner, { clearProps: 'x,y,transform' });
+      }
     });
   }
 
   ngOnDestroy(): void {
-    this.ngZone.runOutsideAngular(() => {
-      const node = this.el.nativeElement;
-      node.removeEventListener('mouseenter', this.handleMouseEnter);
-      node.removeEventListener('mousemove', this.handleMouseMove);
-      node.removeEventListener('mouseleave', this.handleMouseLeave);
-      node.style.willChange = 'auto';
-      gsap.killTweensOf(node);
-      const inner = node.querySelector<HTMLElement>(this.magneticInnerSelector);
-      if (inner) {
-        gsap.killTweensOf(inner);
-      }
-    });
+    this.disableSpring();
   }
 }

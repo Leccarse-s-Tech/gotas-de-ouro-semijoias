@@ -1,6 +1,7 @@
-import { Injectable, NgZone, OnDestroy, signal } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, effect, signal } from '@angular/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MotionPreferenceService } from './motion-preference.service';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,7 +26,20 @@ export class ScrollPhysicsService implements OnDestroy {
     }
   };
 
-  constructor(private ngZone: NgZone) {}
+  constructor(
+    private ngZone: NgZone,
+    private motionService: MotionPreferenceService
+  ) {
+    effect(() => {
+      this.motionService.prefersReducedMotion();
+      if (!this.initialized || typeof window === 'undefined') return;
+      this.ngZone.runOutsideAngular(() => {
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+        });
+      });
+    });
+  }
 
   init(): void {
     if (this.initialized || typeof window === 'undefined') return;
@@ -51,7 +65,7 @@ export class ScrollPhysicsService implements OnDestroy {
       const target = document.querySelector<HTMLElement>(selector);
       if (!target) return;
       const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 64);
-      window.scrollTo({ top });
+      window.scrollTo({ top, behavior: 'auto' });
     });
   }
 

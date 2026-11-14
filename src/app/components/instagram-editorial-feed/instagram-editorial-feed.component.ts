@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
+import { MotionPreferenceService } from '../../services/motion-preference.service';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +17,11 @@ gsap.registerPlugin(ScrollTrigger);
       <div class="pointer-events-none absolute inset-0 texture-surface-linen opacity-[0.12]"></div>
 
       <div class="relative z-10 w-full max-w-7xl 2xl:max-w-[1600px] mx-auto">
-        <div #feedHeader class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-14 opacity-0 gpu-animated">
+        <div
+          #feedHeader
+          class="js-reveal-text flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-14 gpu-animated"
+          [class.opacity-0]="!motionService.prefersReducedMotion()"
+        >
           <div class="min-w-0">
             <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl text-onyx-graphite leading-tight">
               Diário visual &amp; <span class="italic font-light leading-[1.1] pb-1 inline-block">novas criações.</span>
@@ -32,7 +37,7 @@ gsap.registerPlugin(ScrollTrigger);
             rel="noopener noreferrer"
             appMagneticSpring
             [magneticStrength]="0.24"
-            class="w-fit inline-flex items-center gap-2.5 px-5 py-3 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone shrink-0 gpu-animated"
+            class="w-fit inline-flex items-center gap-2.5 px-5 py-3 rounded-full border border-onyx-graphite bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-onyx-graphite hover:text-vanilla-bone shrink-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
           >
             <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
               <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -54,13 +59,14 @@ gsap.registerPlugin(ScrollTrigger);
             [href]="instagramReelUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="lg:col-span-5 group relative rounded-t-[999px] rounded-b-2xl overflow-hidden border border-travertine bg-soft-linen p-3 flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
+            class="js-arch-reveal js-scroll-card lg:col-span-5 group relative rounded-t-[999px] rounded-b-2xl overflow-hidden border border-travertine bg-soft-linen p-3 flex flex-col justify-between min-w-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
           >
             <div class="relative overflow-hidden rounded-t-[999px] rounded-b-xl aspect-[4/5] bg-onyx-graphite">
               <img
                 src="assets/editorial/joia-4-editorial.webp"
                 alt="Curadoria de semijoias Gotas de Ouro no Instagram"
-                class="feed-arch-photo w-full h-full object-cover gpu-animated"
+                class="js-arch-media feed-arch-photo w-full h-full object-cover gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
                 loading="eager"
                 decoding="async"
               />
@@ -82,13 +88,14 @@ gsap.registerPlugin(ScrollTrigger);
                 [href]="instagramProfileUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="feed-stagger-item group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
+                class="js-scroll-card feed-stagger-item group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
+                [class.opacity-0]="!motionService.prefersReducedMotion()"
               >
                 <div class="overflow-hidden rounded-xl aspect-[16/11]">
                   <img
                     src="assets/editorial/editorial-macro-frame-2.webp"
                     alt="Composição delicada de semijoias Gotas de Ouro"
-                    class="w-full h-full object-cover gpu-animated"
+                    class="w-full h-full object-cover gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
                     loading="eager"
                     decoding="async"
                   />
@@ -103,13 +110,14 @@ gsap.registerPlugin(ScrollTrigger);
                 [href]="instagramProfileUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="feed-stagger-item group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 opacity-0 gpu-animated"
+                class="js-scroll-card feed-stagger-item group border border-travertine bg-soft-linen p-3 rounded-2xl flex flex-col justify-between min-w-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
+                [class.opacity-0]="!motionService.prefersReducedMotion()"
               >
                 <div class="overflow-hidden rounded-xl aspect-[16/11]">
                   <img
                     src="assets/editorial/editorial-macro-frame-3.webp"
                     alt="Detalhe de semijoia selecionada Gotas de Ouro"
-                    class="w-full h-full object-cover gpu-animated"
+                    class="w-full h-full object-cover gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
                     loading="eager"
                     decoding="async"
                   />
@@ -121,7 +129,10 @@ gsap.registerPlugin(ScrollTrigger);
               </a>
             </div>
 
-            <div class="feed-stagger-item border border-travertine bg-soft-linen rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 min-w-0 opacity-0 gpu-animated">
+            <div
+              class="js-scroll-card feed-stagger-item border border-travertine bg-soft-linen rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 min-w-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
+              [class.opacity-0]="!motionService.prefersReducedMotion()"
+            >
               <div class="min-w-0">
                 <p class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.12] pb-1">
                   Deseja receber vídeos personalizados de uma peça?
@@ -136,7 +147,7 @@ gsap.registerPlugin(ScrollTrigger);
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.25"
-                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate shrink-0 gpu-animated"
+                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate shrink-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>
@@ -158,17 +169,16 @@ export class InstagramEditorialFeedComponent implements AfterViewInit, OnDestroy
   @ViewChild('feedArchCard') feedArchCard!: ElementRef<HTMLElement>;
   @ViewChild('feedRightColumn') feedRightColumn!: ElementRef<HTMLElement>;
 
+  readonly motionService = inject(MotionPreferenceService);
+  private readonly ngZone = inject(NgZone);
+
   readonly instagramProfileUrl = 'https://www.instagram.com/gotasdeouro.bonsucesso/';
   readonly instagramReelUrl = 'https://www.instagram.com/p/DeSDjxkhj4a/';
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
 
   private mm: gsap.MatchMedia | null = null;
 
-  constructor(private ngZone: NgZone) {}
-
   ngAfterViewInit(): void {
-    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
     this.ngZone.runOutsideAngular(() => {
       const sectionEl = this.feedSection?.nativeElement;
       const headerEl = this.feedHeader?.nativeElement;
@@ -179,131 +189,158 @@ export class InstagramEditorialFeedComponent implements AfterViewInit, OnDestroy
 
       this.mm = gsap.matchMedia();
 
-      this.mm.add('(min-width: 768px)', () => {
-        gsap.fromTo(
-          headerEl,
-          { y: 35, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 85%',
-              end: 'top 50%',
-              scrub: 0.5
-            }
-          }
-        );
+      this.mm.add(
+        {
+          isDesktop: '(min-width: 768px)',
+          isMobile: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)'
+        },
+        (context) => {
+          const { isDesktop, reduceMotion } = context.conditions as {
+            isDesktop: boolean;
+            isMobile: boolean;
+            reduceMotion: boolean;
+          };
 
-        gsap.fromTo(
-          archCard,
-          {
-            scale: 0.88,
-            y: 50,
-            opacity: 0,
-            clipPath: 'inset(10% 8% 0% 8% round 999px 999px 16px 16px)',
-            force3D: true
-          },
-          {
-            scale: 1,
-            y: 0,
-            opacity: 1,
-            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: archCard,
-              start: 'top 88%',
-              end: 'top 35%',
-              scrub: 0.6
-            }
-          }
-        );
+          if (reduceMotion) {
+            const arches = sectionEl.querySelectorAll('.js-arch-reveal');
+            const medias = sectionEl.querySelectorAll('.js-arch-media, .js-scroll-card img');
+            const cardsAndTexts = sectionEl.querySelectorAll('.js-scroll-card, .js-reveal-text');
 
-        const staggerItems = rightCol.querySelectorAll<HTMLElement>('.feed-stagger-item');
-        gsap.fromTo(
-          staggerItems,
-          { y: 45, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.15,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: rightCol,
-              start: 'top 85%',
-              end: 'top 40%',
-              scrub: 0.5
-            }
+            gsap.set(arches, { clearProps: 'all' });
+            gsap.set(arches, { clipPath: 'none', opacity: 1, scale: 1, y: 0 });
+            gsap.set(medias, { clearProps: 'all' });
+            gsap.set(medias, { scale: 1, yPercent: 0, y: 0 });
+            gsap.set(cardsAndTexts, { clearProps: 'all' });
+            gsap.set(cardsAndTexts, { opacity: 1, scale: 1, y: 0, x: 0 });
+            return;
           }
-        );
-      });
 
-      this.mm.add('(max-width: 767px)', () => {
-        gsap.fromTo(
-          headerEl,
-          { y: 20, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 90%',
-              end: 'top 60%',
-              scrub: 0.5
-            }
-          }
-        );
+          if (isDesktop) {
+            gsap.fromTo(
+              headerEl,
+              { y: 35, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 85%',
+                  end: 'top 50%',
+                  scrub: 0.5
+                }
+              }
+            );
 
-        gsap.fromTo(
-          archCard,
-          {
-            scale: 0.94,
-            y: 30,
-            opacity: 0,
-            clipPath: 'inset(6% 4% 0% 4% round 999px 999px 16px 16px)',
-            force3D: true
-          },
-          {
-            scale: 1,
-            y: 0,
-            opacity: 1,
-            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: archCard,
-              start: 'top 92%',
-              end: 'top 45%',
-              scrub: 0.5
-            }
-          }
-        );
+            gsap.fromTo(
+              archCard,
+              {
+                scale: 0.88,
+                y: 50,
+                opacity: 0,
+                clipPath: 'inset(10% 8% 0% 8% round 999px 999px 16px 16px)',
+                force3D: true
+              },
+              {
+                scale: 1,
+                y: 0,
+                opacity: 1,
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: archCard,
+                  start: 'top 88%',
+                  end: 'top 35%',
+                  scrub: 0.6
+                }
+              }
+            );
 
-        const staggerItems = rightCol.querySelectorAll<HTMLElement>('.feed-stagger-item');
-        gsap.fromTo(
-          staggerItems,
-          { y: 25, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: rightCol,
-              start: 'top 92%',
-              end: 'top 55%',
-              scrub: 0.5
-            }
+            const staggerItems = rightCol.querySelectorAll<HTMLElement>('.feed-stagger-item');
+            gsap.fromTo(
+              staggerItems,
+              { y: 45, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                stagger: 0.15,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: rightCol,
+                  start: 'top 85%',
+                  end: 'top 40%',
+                  scrub: 0.5
+                }
+              }
+            );
+          } else {
+            gsap.fromTo(
+              headerEl,
+              { y: 20, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 90%',
+                  end: 'top 60%',
+                  scrub: 0.5
+                }
+              }
+            );
+
+            gsap.fromTo(
+              archCard,
+              {
+                scale: 0.94,
+                y: 30,
+                opacity: 0,
+                clipPath: 'inset(6% 4% 0% 4% round 999px 999px 16px 16px)',
+                force3D: true
+              },
+              {
+                scale: 1,
+                y: 0,
+                opacity: 1,
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: archCard,
+                  start: 'top 92%',
+                  end: 'top 45%',
+                  scrub: 0.5
+                }
+              }
+            );
+
+            const staggerItems = rightCol.querySelectorAll<HTMLElement>('.feed-stagger-item');
+            gsap.fromTo(
+              staggerItems,
+              { y: 25, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                stagger: 0.1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: rightCol,
+                  start: 'top 92%',
+                  end: 'top 55%',
+                  scrub: 0.5
+                }
+              }
+            );
           }
-        );
-      });
+        }
+      );
     });
   }
 

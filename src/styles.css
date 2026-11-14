@@ -96,7 +96,30 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .animate-marquee-left {
     animation: none !important;
+  }
+
+  .js-arch-reveal {
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .js-arch-media,
+  .js-scroll-card,
+  .js-scroll-card img,
+  .js-reveal-text {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

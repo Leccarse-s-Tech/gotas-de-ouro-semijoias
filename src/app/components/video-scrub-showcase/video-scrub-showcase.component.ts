@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, effect, inject } from '@angular/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
+import { MotionPreferenceService } from '../../services/motion-preference.service';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +17,11 @@ gsap.registerPlugin(ScrollTrigger);
       <div class="pointer-events-none absolute inset-0 texture-surface-travertine opacity-[0.12]"></div>
 
       <div class="relative z-10 w-full max-w-full xl:max-w-[1540px] 2xl:max-w-[1720px] mx-auto">
-        <div #scrubHeader class="w-full max-w-5xl xl:max-w-none mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 opacity-0 gpu-animated">
+        <div
+          #scrubHeader
+          class="js-reveal-text w-full max-w-5xl xl:max-w-none mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 gpu-animated"
+          [class.opacity-0]="!motionService.prefersReducedMotion()"
+        >
           <div>
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-2">
               Matéria &amp; Luz
@@ -33,7 +38,9 @@ gsap.registerPlugin(ScrollTrigger);
             <div class="w-24 sm:w-28 h-[1px] bg-travertine overflow-hidden">
               <div
                 #progressBar
-                class="h-full w-full bg-onyx-graphite origin-left scale-x-0 gpu-animated"
+                class="h-full w-full bg-onyx-graphite origin-left gpu-animated"
+                [class.scale-x-0]="!motionService.prefersReducedMotion()"
+                [class.scale-x-100]="motionService.prefersReducedMotion()"
               ></div>
             </div>
           </div>
@@ -41,26 +48,36 @@ gsap.registerPlugin(ScrollTrigger);
 
         <div
           #scrubArchBox
-          class="w-full max-w-5xl xl:max-w-none mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] md:aspect-[16/10] xl:aspect-[21/9] 2xl:aspect-[2.35/1] border border-travertine bg-onyx-graphite gpu-animated"
+          class="js-arch-reveal w-full max-w-5xl xl:max-w-none mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] md:aspect-[16/10] xl:aspect-[21/9] 2xl:aspect-[2.35/1] border border-travertine bg-onyx-graphite gpu-animated"
         >
           <video
             #scrubVideo
             src="assets/editorial/scrub-showcase-video.mp4"
             poster="assets/editorial/editorial-macro-frame-3.webp"
-            autoplay
+            [attr.autoplay]="motionService.prefersReducedMotion() ? null : ''"
             muted
-            loop
+            [loop]="!motionService.prefersReducedMotion()"
             playsinline
             preload="metadata"
             disablePictureInPicture
-            class="w-full h-full object-cover gpu-animated"
+            class="js-arch-media w-full h-full object-cover gpu-animated"
           ></video>
+
+          <img
+            *ngIf="motionService.prefersReducedMotion()"
+            src="assets/editorial/editorial-macro-frame-3.webp"
+            alt="Semijoia em foco Gotas de Ouro Semijoias"
+            class="js-arch-media absolute inset-0 w-full h-full object-cover pointer-events-none"
+            loading="eager"
+            decoding="async"
+          />
 
           <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/65 via-onyx-graphite/15 to-transparent"></div>
 
           <div
             #scrubOverlayText
-            class="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center gap-4 text-vanilla-bone opacity-0 gpu-animated"
+            class="js-reveal-text absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center gap-4 text-vanilla-bone gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
           >
             <p class="font-editorial italic max-w-md mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-vanilla-bone">
               Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
@@ -72,7 +89,7 @@ gsap.registerPlugin(ScrollTrigger);
               rel="noopener noreferrer"
               appMagneticSpring
               [magneticStrength]="0.22"
-              class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-travertine shrink-0 gpu-animated"
+              class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-travertine shrink-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
             >
               <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                 <span>Atendimento Exclusivo</span>
@@ -85,15 +102,24 @@ gsap.registerPlugin(ScrollTrigger);
         </div>
 
         <div #scrubFooterBlock class="w-full max-w-5xl xl:max-w-none mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-center md:text-left mt-8 pt-6 border-t border-travertine">
-          <div class="scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 opacity-0 gpu-animated">
+          <div
+            class="js-scroll-card scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <span class="font-editorial italic text-lg text-onyx-graphite">Acabamento Primoroso</span>
             <span class="text-xs text-mineral-taupe">Seleção cuidadosa em cada detalhe</span>
           </div>
-          <div class="scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 opacity-0 gpu-animated">
+          <div
+            class="js-scroll-card scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <span class="font-editorial italic text-lg text-onyx-graphite">Consultoria Direta</span>
             <span class="text-xs text-mineral-taupe">Vídeos reais das peças via WhatsApp</span>
           </div>
-          <div class="scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 opacity-0 gpu-animated">
+          <div
+            class="js-scroll-card scrub-footer-item flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-baseline justify-center md:justify-start gap-1 sm:gap-2.5 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <span class="font-editorial italic text-lg text-onyx-graphite">Envio Nacional</span>
             <span class="text-xs text-mineral-taupe">Atendimento para todo o Brasil</span>
           </div>
@@ -112,12 +138,40 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
   @ViewChild('scrubFooterBlock') scrubFooterBlock!: ElementRef<HTMLElement>;
 
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
+  readonly motionService = inject(MotionPreferenceService);
 
   private readonly ngZone = inject(NgZone);
   private mm: gsap.MatchMedia | null = null;
   private observer: IntersectionObserver | null = null;
+  private isVideoVisible = false;
+  private viewInitialized = false;
+
+  constructor() {
+    effect(() => {
+      const reduced = this.motionService.prefersReducedMotion();
+      if (!this.viewInitialized) return;
+      this.syncVideoPlaybackState(reduced);
+    });
+  }
+
+  private syncVideoPlaybackState(reduced: boolean): void {
+    this.ngZone.runOutsideAngular(() => {
+      const videoEl = this.scrubVideo?.nativeElement;
+      if (!videoEl) return;
+      if (reduced) {
+        videoEl.pause();
+        videoEl.removeAttribute('autoplay');
+      } else {
+        videoEl.setAttribute('autoplay', '');
+        if (this.isVideoVisible) {
+          videoEl.play().catch(() => {});
+        }
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
+    this.viewInitialized = true;
     this.ngZone.runOutsideAngular(() => {
       const sectionEl = this.scrubSection?.nativeElement;
       const headerEl = this.scrubHeader?.nativeElement;
@@ -132,11 +186,17 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
       videoEl.muted = true;
       videoEl.disablePictureInPicture = true;
 
+      if (this.motionService.prefersReducedMotion()) {
+        videoEl.pause();
+        videoEl.removeAttribute('autoplay');
+      }
+
       this.observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             const video = entry.target as HTMLVideoElement;
-            if (entry.isIntersecting) {
+            this.isVideoVisible = entry.isIntersecting;
+            if (entry.isIntersecting && !this.motionService.prefersReducedMotion()) {
               video.play().catch(() => {});
             } else {
               video.pause();
@@ -147,178 +207,205 @@ export class VideoScrubShowcaseComponent implements AfterViewInit, OnDestroy {
       );
       this.observer.observe(videoEl);
 
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
       const setBarScale = gsap.quickSetter(barEl, 'scaleX');
       this.mm = gsap.matchMedia();
 
-      this.mm.add('(min-width: 768px)', () => {
-        gsap.fromTo(
-          headerEl,
-          { y: 35, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 85%',
-              end: 'top 50%',
-              scrub: 0.5
-            }
+      this.mm.add(
+        {
+          isDesktop: '(min-width: 768px)',
+          isMobile: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)'
+        },
+        (context) => {
+          const { isDesktop, reduceMotion } = context.conditions as {
+            isDesktop: boolean;
+            isMobile: boolean;
+            reduceMotion: boolean;
+          };
+
+          if (reduceMotion) {
+            const arches = sectionEl.querySelectorAll('.js-arch-reveal');
+            const medias = sectionEl.querySelectorAll('.js-arch-media');
+            const cardsAndTexts = sectionEl.querySelectorAll('.js-scroll-card, .js-reveal-text');
+
+            gsap.set(arches, { clearProps: 'all' });
+            gsap.set(arches, { clipPath: 'none', opacity: 1, scale: 1, y: 0 });
+            gsap.set(medias, { clearProps: 'all' });
+            gsap.set(medias, { scale: 1, yPercent: 0, y: 0 });
+            gsap.set(cardsAndTexts, { clearProps: 'all' });
+            gsap.set(cardsAndTexts, { opacity: 1, scale: 1, y: 0, x: 0 });
+            gsap.set(barEl, { clearProps: 'all' });
+            gsap.set(barEl, { scaleX: 1 });
+            return;
           }
-        );
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: archBox,
-            start: 'top 85%',
-            end: 'center center',
-            scrub: 0.6,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              setBarScale(self.progress);
-            }
+          if (isDesktop) {
+            gsap.fromTo(
+              headerEl,
+              { y: 35, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 85%',
+                  end: 'top 50%',
+                  scrub: 0.5
+                }
+              }
+            );
+
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: archBox,
+                start: 'top 85%',
+                end: 'center center',
+                scrub: 0.6,
+                invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                  setBarScale(self.progress);
+                }
+              }
+            });
+
+            tl.fromTo(
+              archBox,
+              {
+                scale: 0.72,
+                y: 60,
+                clipPath: 'inset(14% 18% 0% 18% round 999px 999px 20px 20px)',
+                transformOrigin: 'center center',
+                force3D: true
+              },
+              {
+                scale: 1,
+                y: 0,
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 20px 20px)',
+                ease: 'none',
+                force3D: true
+              },
+              0
+            );
+
+            tl.fromTo(
+              videoEl,
+              { scale: 1.25, force3D: true },
+              { scale: 1, ease: 'none', force3D: true },
+              0
+            );
+
+            tl.fromTo(
+              overlayEl,
+              { y: 25, opacity: 0, force3D: true },
+              { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
+              0.35
+            );
+
+            const footerItems = footerEl.querySelectorAll<HTMLElement>('.scrub-footer-item');
+            gsap.fromTo(
+              footerItems,
+              { y: 30, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                stagger: 0.12,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: footerEl,
+                  start: 'top 92%',
+                  end: 'top 65%',
+                  scrub: 0.5
+                }
+              }
+            );
+          } else {
+            gsap.fromTo(
+              headerEl,
+              { y: 20, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 90%',
+                  end: 'top 60%',
+                  scrub: 0.5
+                }
+              }
+            );
+
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: archBox,
+                start: 'top 90%',
+                end: 'center center',
+                scrub: 0.5,
+                invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                  setBarScale(self.progress);
+                }
+              }
+            });
+
+            tl.fromTo(
+              archBox,
+              {
+                scale: 0.88,
+                y: 30,
+                clipPath: 'inset(8% 6% 0% 6% round 999px 999px 16px 16px)',
+                transformOrigin: 'center center',
+                force3D: true
+              },
+              {
+                scale: 1,
+                y: 0,
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+                ease: 'none',
+                force3D: true
+              },
+              0
+            );
+
+            tl.fromTo(
+              videoEl,
+              { scale: 1.15, force3D: true },
+              { scale: 1, ease: 'none', force3D: true },
+              0
+            );
+
+            tl.fromTo(
+              overlayEl,
+              { y: 15, opacity: 0, force3D: true },
+              { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
+              0.3
+            );
+
+            const footerItems = footerEl.querySelectorAll<HTMLElement>('.scrub-footer-item');
+            gsap.fromTo(
+              footerItems,
+              { y: 20, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                stagger: 0.1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: footerEl,
+                  start: 'top 95%',
+                  end: 'top 75%',
+                  scrub: 0.5
+                }
+              }
+            );
           }
-        });
-
-        tl.fromTo(
-          archBox,
-          {
-            scale: 0.72,
-            y: 60,
-            clipPath: 'inset(14% 18% 0% 18% round 999px 999px 20px 20px)',
-            transformOrigin: 'center center',
-            force3D: true
-          },
-          {
-            scale: 1,
-            y: 0,
-            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 20px 20px)',
-            ease: 'none',
-            force3D: true
-          },
-          0
-        );
-
-        tl.fromTo(
-          videoEl,
-          { scale: 1.25, force3D: true },
-          { scale: 1, ease: 'none', force3D: true },
-          0
-        );
-
-        tl.fromTo(
-          overlayEl,
-          { y: 25, opacity: 0, force3D: true },
-          { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
-          0.35
-        );
-
-        const footerItems = footerEl.querySelectorAll<HTMLElement>('.scrub-footer-item');
-        gsap.fromTo(
-          footerItems,
-          { y: 30, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.12,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: footerEl,
-              start: 'top 92%',
-              end: 'top 65%',
-              scrub: 0.5
-            }
-          }
-        );
-      });
-
-      this.mm.add('(max-width: 767px)', () => {
-        gsap.fromTo(
-          headerEl,
-          { y: 20, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 90%',
-              end: 'top 60%',
-              scrub: 0.5
-            }
-          }
-        );
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: archBox,
-            start: 'top 90%',
-            end: 'center center',
-            scrub: 0.5,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              setBarScale(self.progress);
-            }
-          }
-        });
-
-        tl.fromTo(
-          archBox,
-          {
-            scale: 0.88,
-            y: 30,
-            clipPath: 'inset(8% 6% 0% 6% round 999px 999px 16px 16px)',
-            transformOrigin: 'center center',
-            force3D: true
-          },
-          {
-            scale: 1,
-            y: 0,
-            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
-            ease: 'none',
-            force3D: true
-          },
-          0
-        );
-
-        tl.fromTo(
-          videoEl,
-          { scale: 1.15, force3D: true },
-          { scale: 1, ease: 'none', force3D: true },
-          0
-        );
-
-        tl.fromTo(
-          overlayEl,
-          { y: 15, opacity: 0, force3D: true },
-          { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
-          0.3
-        );
-
-        const footerItems = footerEl.querySelectorAll<HTMLElement>('.scrub-footer-item');
-        gsap.fromTo(
-          footerItems,
-          { y: 20, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: footerEl,
-              start: 'top 95%',
-              end: 'top 75%',
-              scrub: 0.5
-            }
-          }
-        );
-      });
+        }
+      );
     });
   }
 

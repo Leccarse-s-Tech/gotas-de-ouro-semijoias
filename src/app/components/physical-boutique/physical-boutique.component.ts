@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
+import { MotionPreferenceService } from '../../services/motion-preference.service';
 import reviewsData from '../../../assets/data/reviews.json';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,7 +19,11 @@ gsap.registerPlugin(ScrollTrigger);
 
       <div class="relative z-10 w-full max-w-7xl 2xl:max-w-[1600px] mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          <div #boutiqueTextBlock class="min-w-0 opacity-0 gpu-animated">
+          <div
+            #boutiqueTextBlock
+            class="js-reveal-text min-w-0 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <h2 class="font-editorial text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-onyx-graphite">
               Presença física sólida, <span class="italic font-light leading-[1.1] pb-1 inline-block">alcance em todo o Brasil.</span>
             </h2>
@@ -60,7 +65,7 @@ gsap.registerPlugin(ScrollTrigger);
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.24"
-                class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2 whitespace-nowrap">
                   <span>Traçar rota no Google Maps</span>
@@ -76,7 +81,7 @@ gsap.registerPlugin(ScrollTrigger);
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
               >
                 <span class="magnetic-inner whitespace-nowrap">Atendimento Exclusivo</span>
               </a>
@@ -84,12 +89,15 @@ gsap.registerPlugin(ScrollTrigger);
           </div>
 
           <div #boutiquePhotosWrapper class="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-6 items-end w-full min-w-0">
-            <div class="boutique-photo-card sm:col-span-7 border border-[#D8D3C8] bg-vanilla-bone p-3 rounded-2xl min-w-0 opacity-0 gpu-animated">
+            <div
+              class="js-scroll-card boutique-photo-card sm:col-span-7 border border-travertine bg-vanilla-bone p-3 rounded-2xl min-w-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
+              [class.opacity-0]="!motionService.prefersReducedMotion()"
+            >
               <div class="overflow-hidden rounded-xl">
                 <img
                   src="assets/editorial/fachada-editorial-1.webp"
                   alt="Boutique fisica Gotas de Ouro Semijoias"
-                  class="boutique-photo-img w-full aspect-[16/10] object-cover gpu-animated"
+                  class="js-arch-media boutique-photo-img w-full aspect-[16/10] object-cover gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
                   loading="eager"
                   decoding="async"
                 />
@@ -100,12 +108,15 @@ gsap.registerPlugin(ScrollTrigger);
               </div>
             </div>
 
-            <div class="boutique-photo-card sm:col-span-5 rounded-t-[999px] rounded-b-2xl overflow-hidden border border-[#D8D3C8] bg-vanilla-bone p-3 min-w-0 opacity-0 gpu-animated">
+            <div
+              class="js-scroll-card js-arch-reveal boutique-photo-card sm:col-span-5 rounded-t-[999px] rounded-b-2xl overflow-hidden border border-travertine bg-vanilla-bone p-3 min-w-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
+              [class.opacity-0]="!motionService.prefersReducedMotion()"
+            >
               <div class="overflow-hidden rounded-t-[999px] rounded-b-xl">
                 <img
                   src="assets/editorial/fachada-editorial-2.webp"
                   alt="Entrada da boutique fisica Gotas de Ouro"
-                  class="boutique-photo-img w-full aspect-[3/4] object-cover gpu-animated"
+                  class="js-arch-media boutique-photo-img w-full aspect-[3/4] object-cover gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
                   loading="eager"
                   decoding="async"
                 />
@@ -126,6 +137,9 @@ export class PhysicalBoutiqueComponent implements AfterViewInit, OnDestroy {
   @ViewChild('boutiqueTextBlock') boutiqueTextBlock!: ElementRef<HTMLElement>;
   @ViewChild('boutiquePhotosWrapper') boutiquePhotosWrapper!: ElementRef<HTMLElement>;
 
+  readonly motionService = inject(MotionPreferenceService);
+  private readonly ngZone = inject(NgZone);
+
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
   readonly mapsUrl = signal<string>(
     reviewsData.mapsUrl || 'https://www.google.com/maps/place//data=!4m2!3m1!19sChIJz6XpMoOJzpQRwt6tTNCvKrE'
@@ -142,11 +156,7 @@ export class PhysicalBoutiqueComponent implements AfterViewInit, OnDestroy {
 
   private mm: gsap.MatchMedia | null = null;
 
-  constructor(private ngZone: NgZone) {}
-
   ngAfterViewInit(): void {
-    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
     this.ngZone.runOutsideAngular(() => {
       const sectionEl = this.boutiqueSection?.nativeElement;
       const textEl = this.boutiqueTextBlock?.nativeElement;
@@ -156,103 +166,130 @@ export class PhysicalBoutiqueComponent implements AfterViewInit, OnDestroy {
 
       this.mm = gsap.matchMedia();
 
-      this.mm.add('(min-width: 768px)', () => {
-        gsap.fromTo(
-          textEl,
-          { y: 40, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 85%',
-              end: 'top 40%',
-              scrub: 0.5
-            }
-          }
-        );
+      this.mm.add(
+        {
+          isDesktop: '(min-width: 768px)',
+          isMobile: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)'
+        },
+        (context) => {
+          const { isDesktop, reduceMotion } = context.conditions as {
+            isDesktop: boolean;
+            isMobile: boolean;
+            reduceMotion: boolean;
+          };
 
-        const cards = photosWrapper.querySelectorAll<HTMLElement>('.boutique-photo-card');
-        gsap.fromTo(
-          cards,
-          { y: 60, opacity: 0, scale: 0.94, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            stagger: 0.15,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: photosWrapper,
-              start: 'top 85%',
-              end: 'top 40%',
-              scrub: 0.5
-            }
-          }
-        );
+          if (reduceMotion) {
+            const arches = sectionEl.querySelectorAll('.js-arch-reveal');
+            const medias = sectionEl.querySelectorAll('.js-arch-media, .js-scroll-card img');
+            const cardsAndTexts = sectionEl.querySelectorAll('.js-scroll-card, .js-reveal-text');
 
-        const photos = photosWrapper.querySelectorAll<HTMLElement>('.boutique-photo-img');
-        photos.forEach((img) => {
-          gsap.fromTo(
-            img,
-            { scale: 1.12, yPercent: -5, force3D: true },
-            {
-              scale: 1.12,
-              yPercent: 5,
-              ease: 'none',
-              force3D: true,
-              scrollTrigger: {
-                trigger: img,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 0.5
+            gsap.set(arches, { clearProps: 'all' });
+            gsap.set(arches, { clipPath: 'none', opacity: 1, scale: 1, y: 0 });
+            gsap.set(medias, { clearProps: 'all' });
+            gsap.set(medias, { scale: 1, yPercent: 0, y: 0 });
+            gsap.set(cardsAndTexts, { clearProps: 'all' });
+            gsap.set(cardsAndTexts, { opacity: 1, scale: 1, y: 0, x: 0 });
+            return;
+          }
+
+          if (isDesktop) {
+            gsap.fromTo(
+              textEl,
+              { y: 40, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 85%',
+                  end: 'top 40%',
+                  scrub: 0.5
+                }
               }
-            }
-          );
-        });
-      });
+            );
 
-      this.mm.add('(max-width: 767px)', () => {
-        gsap.fromTo(
-          textEl,
-          { y: 25, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 90%',
-              end: 'top 55%',
-              scrub: 0.5
-            }
-          }
-        );
+            const cards = photosWrapper.querySelectorAll<HTMLElement>('.boutique-photo-card');
+            gsap.fromTo(
+              cards,
+              { y: 60, opacity: 0, scale: 0.94, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                stagger: 0.15,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: photosWrapper,
+                  start: 'top 85%',
+                  end: 'top 40%',
+                  scrub: 0.5
+                }
+              }
+            );
 
-        const cards = photosWrapper.querySelectorAll<HTMLElement>('.boutique-photo-card');
-        gsap.fromTo(
-          cards,
-          { y: 30, opacity: 0, scale: 0.96, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            stagger: 0.1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: photosWrapper,
-              start: 'top 92%',
-              end: 'top 55%',
-              scrub: 0.5
-            }
+            const photos = photosWrapper.querySelectorAll<HTMLElement>('.boutique-photo-img');
+            photos.forEach((img) => {
+              gsap.fromTo(
+                img,
+                { scale: 1.12, yPercent: -5, force3D: true },
+                {
+                  scale: 1.12,
+                  yPercent: 5,
+                  ease: 'none',
+                  force3D: true,
+                  scrollTrigger: {
+                    trigger: img,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 0.5
+                  }
+                }
+              );
+            });
+          } else {
+            gsap.fromTo(
+              textEl,
+              { y: 25, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 90%',
+                  end: 'top 55%',
+                  scrub: 0.5
+                }
+              }
+            );
+
+            const cards = photosWrapper.querySelectorAll<HTMLElement>('.boutique-photo-card');
+            gsap.fromTo(
+              cards,
+              { y: 30, opacity: 0, scale: 0.96, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                stagger: 0.1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: photosWrapper,
+                  start: 'top 92%',
+                  end: 'top 55%',
+                  scrub: 0.5
+                }
+              }
+            );
           }
-        );
-      });
+        }
+      );
     });
   }
 

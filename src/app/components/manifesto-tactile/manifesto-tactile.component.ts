@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, 
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
+import { MotionPreferenceService } from '../../services/motion-preference.service';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,7 +18,11 @@ gsap.registerPlugin(ScrollTrigger);
 
       <div class="relative z-10 w-full max-w-7xl 2xl:max-w-[1600px] mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          <div #manifestoHeadingBlock class="lg:col-span-6 min-w-0 opacity-0 gpu-animated">
+          <div
+            #manifestoHeadingBlock
+            class="js-reveal-text lg:col-span-6 min-w-0 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <p class="text-[11px] uppercase tracking-[0.24em] text-mineral-taupe mb-3 sm:mb-4">
               Essência &amp; Curadoria
             </p>
@@ -26,7 +31,11 @@ gsap.registerPlugin(ScrollTrigger);
             </h2>
           </div>
 
-          <div #manifestoTextBlock class="lg:col-span-6 flex flex-col justify-between gap-5 sm:gap-6 lg:pt-4 min-w-0 opacity-0 gpu-animated">
+          <div
+            #manifestoTextBlock
+            class="js-reveal-text lg:col-span-6 flex flex-col justify-between gap-5 sm:gap-6 lg:pt-4 min-w-0 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <p class="text-sm sm:text-base lg:text-[17px] text-mineral-taupe leading-relaxed max-w-[58ch]">
               Na Gotas de Ouro, acreditamos que uma semijoia não deve ser escolhida em uma prateleira digital impessoal. Cada peça do nosso acervo passa por uma cuidadosa seleção que valoriza o brilho delicado, o caimento elegante e a harmonia em cada detalhe.
             </p>
@@ -42,7 +51,7 @@ gsap.registerPlugin(ScrollTrigger);
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.25"
-                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate gpu-animated"
+                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2.5 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>
@@ -56,10 +65,13 @@ gsap.registerPlugin(ScrollTrigger);
         </div>
 
         <div class="mt-12 pt-10 relative">
-          <div #manifestoDividerLine class="absolute top-0 inset-x-0 h-[1px] bg-travertine origin-left gpu-animated"></div>
+          <div #manifestoDividerLine class="js-reveal-text absolute top-0 inset-x-0 h-[1px] bg-travertine origin-left gpu-animated"></div>
 
           <div #manifestoPillarsBlock class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
-            <div class="manifesto-pillar-item flex flex-col gap-2 min-w-0 opacity-0 gpu-animated">
+            <div
+              class="js-scroll-card manifesto-pillar-item flex flex-col gap-2 min-w-0 gpu-animated"
+              [class.opacity-0]="!motionService.prefersReducedMotion()"
+            >
               <h3 class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">
                 Acabamento Primoroso
               </h3>
@@ -68,7 +80,10 @@ gsap.registerPlugin(ScrollTrigger);
               </p>
             </div>
 
-            <div class="manifesto-pillar-item flex flex-col gap-2 lg:border-l lg:border-travertine lg:pl-8 min-w-0 opacity-0 gpu-animated">
+            <div
+              class="js-scroll-card manifesto-pillar-item flex flex-col gap-2 lg:border-l lg:border-travertine lg:pl-8 min-w-0 gpu-animated"
+              [class.opacity-0]="!motionService.prefersReducedMotion()"
+            >
               <h3 class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">
                 Olhar Consultivo
               </h3>
@@ -77,7 +92,10 @@ gsap.registerPlugin(ScrollTrigger);
               </p>
             </div>
 
-            <div class="manifesto-pillar-item flex flex-col gap-2 lg:border-l lg:border-travertine lg:pl-8 min-w-0 opacity-0 gpu-animated">
+            <div
+              class="js-scroll-card manifesto-pillar-item flex flex-col gap-2 lg:border-l lg:border-travertine lg:pl-8 min-w-0 gpu-animated"
+              [class.opacity-0]="!motionService.prefersReducedMotion()"
+            >
               <h3 class="font-editorial italic text-2xl sm:text-3xl text-onyx-graphite leading-[1.1] pb-1">
                 Alcance Nacional
               </h3>
@@ -99,12 +117,11 @@ export class ManifestoTactileComponent implements AfterViewInit, OnDestroy {
   @ViewChild('manifestoPillarsBlock') manifestoPillarsBlock!: ElementRef<HTMLElement>;
 
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
+  readonly motionService = inject(MotionPreferenceService);
   private readonly ngZone = inject(NgZone);
   private mm: gsap.MatchMedia | null = null;
 
   ngAfterViewInit(): void {
-    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
     this.ngZone.runOutsideAngular(() => {
       const sectionEl = this.manifestoSection?.nativeElement;
       const headingEl = this.manifestoHeadingBlock?.nativeElement;
@@ -116,113 +133,133 @@ export class ManifestoTactileComponent implements AfterViewInit, OnDestroy {
 
       this.mm = gsap.matchMedia();
 
-      this.mm.add('(min-width: 768px)', () => {
-        gsap.fromTo(
-          [headingEl, textEl],
-          { y: 50, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 85%',
-              end: 'top 35%',
-              scrub: 0.5
-            }
-          }
-        );
+      this.mm.add(
+        {
+          isDesktop: '(min-width: 768px)',
+          isMobile: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)'
+        },
+        (context) => {
+          const { isDesktop, reduceMotion } = context.conditions as {
+            isDesktop: boolean;
+            isMobile: boolean;
+            reduceMotion: boolean;
+          };
 
-        gsap.fromTo(
-          lineEl,
-          { scaleX: 0, transformOrigin: 'left center', force3D: true },
-          {
-            scaleX: 1,
-            ease: 'none',
-            force3D: true,
-            scrollTrigger: {
-              trigger: pillarsEl,
-              start: 'top 92%',
-              end: 'top 60%',
-              scrub: 0.5
-            }
+          if (reduceMotion) {
+            const elements = sectionEl.querySelectorAll('.js-reveal-text, .js-scroll-card');
+            gsap.set(elements, { clearProps: 'all' });
+            gsap.set(elements, { opacity: 1, scale: 1, scaleX: 1, x: 0, y: 0 });
+            return;
           }
-        );
 
-        const pillarItems = pillarsEl.querySelectorAll<HTMLElement>('.manifesto-pillar-item');
-        gsap.fromTo(
-          pillarItems,
-          { y: 45, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.15,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: pillarsEl,
-              start: 'top 90%',
-              end: 'top 50%',
-              scrub: 0.5
-            }
-          }
-        );
-      });
+          if (isDesktop) {
+            gsap.fromTo(
+              [headingEl, textEl],
+              { y: 50, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 85%',
+                  end: 'top 35%',
+                  scrub: 0.5
+                }
+              }
+            );
 
-      this.mm.add('(max-width: 767px)', () => {
-        gsap.fromTo(
-          [headingEl, textEl],
-          { y: 25, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 90%',
-              end: 'top 50%',
-              scrub: 0.5
-            }
-          }
-        );
+            gsap.fromTo(
+              lineEl,
+              { scaleX: 0, transformOrigin: 'left center', force3D: true },
+              {
+                scaleX: 1,
+                ease: 'none',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: pillarsEl,
+                  start: 'top 92%',
+                  end: 'top 60%',
+                  scrub: 0.5
+                }
+              }
+            );
 
-        gsap.fromTo(
-          lineEl,
-          { scaleX: 0, transformOrigin: 'left center', force3D: true },
-          {
-            scaleX: 1,
-            ease: 'none',
-            force3D: true,
-            scrollTrigger: {
-              trigger: pillarsEl,
-              start: 'top 95%',
-              end: 'top 70%',
-              scrub: 0.5
-            }
-          }
-        );
+            const pillarItems = pillarsEl.querySelectorAll<HTMLElement>('.manifesto-pillar-item');
+            gsap.fromTo(
+              pillarItems,
+              { y: 45, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                stagger: 0.15,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: pillarsEl,
+                  start: 'top 90%',
+                  end: 'top 50%',
+                  scrub: 0.5
+                }
+              }
+            );
+          } else {
+            gsap.fromTo(
+              [headingEl, textEl],
+              { y: 25, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: sectionEl,
+                  start: 'top 90%',
+                  end: 'top 50%',
+                  scrub: 0.5
+                }
+              }
+            );
 
-        const pillarItems = pillarsEl.querySelectorAll<HTMLElement>('.manifesto-pillar-item');
-        gsap.fromTo(
-          pillarItems,
-          { y: 25, opacity: 0, force3D: true },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            ease: 'power2.out',
-            force3D: true,
-            scrollTrigger: {
-              trigger: pillarsEl,
-              start: 'top 92%',
-              end: 'top 55%',
-              scrub: 0.5
-            }
+            gsap.fromTo(
+              lineEl,
+              { scaleX: 0, transformOrigin: 'left center', force3D: true },
+              {
+                scaleX: 1,
+                ease: 'none',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: pillarsEl,
+                  start: 'top 95%',
+                  end: 'top 70%',
+                  scrub: 0.5
+                }
+              }
+            );
+
+            const pillarItems = pillarsEl.querySelectorAll<HTMLElement>('.manifesto-pillar-item');
+            gsap.fromTo(
+              pillarItems,
+              { y: 25, opacity: 0, force3D: true },
+              {
+                y: 0,
+                opacity: 1,
+                stagger: 0.1,
+                ease: 'power2.out',
+                force3D: true,
+                scrollTrigger: {
+                  trigger: pillarsEl,
+                  start: 'top 92%',
+                  end: 'top 55%',
+                  scrub: 0.5
+                }
+              }
+            );
           }
-        );
-      });
+        }
+      );
     });
   }
 

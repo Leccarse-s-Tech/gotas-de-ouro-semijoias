@@ -79,7 +79,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
               rel="noopener noreferrer"
               appMagneticSpring
               [magneticStrength]="0.22"
-              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs font-medium tracking-[0.03em] hover:bg-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
             >
               <span class="magnetic-inner whitespace-nowrap">Atendimento Exclusivo</span>
             </a>
@@ -90,7 +90,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
               rel="noopener noreferrer"
               appMagneticSpring
               [magneticStrength]="0.2"
-              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs font-medium hover:border-celadon-slate gpu-animated"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-travertine bg-vanilla-bone text-onyx-graphite text-xs font-medium hover:border-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
             >
               <span class="magnetic-inner whitespace-nowrap">Instagram Oficial</span>
             </a>
@@ -111,7 +111,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
       appMagneticSpring
       [magneticStrength]="0.32"
       aria-label="Atendimento Exclusivo via WhatsApp"
-      class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 inline-flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-travertine text-xs shadow-lg hover:bg-celadon-slate gpu-animated"
+      class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 inline-flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone border border-travertine text-xs shadow-lg hover:bg-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
     >
       <span class="magnetic-inner inline-flex items-center gap-2">
         <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">

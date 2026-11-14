@@ -90,7 +90,7 @@ import { ScrollPhysicsService } from '../../services/scroll-physics.service';
             rel="noopener noreferrer"
             appMagneticSpring
             [magneticStrength]="0.24"
-            class="inline-flex items-center gap-1.5 sm:gap-2 text-xs xl:text-[13px] px-3.5 py-2 xl:px-5 xl:py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone font-medium tracking-[0.02em] hover:bg-celadon-slate shrink-0 gpu-animated"
+            class="inline-flex items-center gap-1.5 sm:gap-2 text-xs xl:text-[13px] px-3.5 py-2 xl:px-5 xl:py-2.5 rounded-full bg-onyx-graphite text-vanilla-bone font-medium tracking-[0.02em] hover:bg-celadon-slate shrink-0 gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
           >
             <span class="magnetic-inner inline-flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
               <span>Atendimento Exclusivo</span>

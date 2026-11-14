@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, ViewChild, effect, inject } from '@angular/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MagneticSpringDirective } from '../../directives/magnetic-spring.directive';
+import { MotionPreferenceService } from '../../services/motion-preference.service';
 import { ScrollPhysicsService } from '../../services/scroll-physics.service';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,13 +19,21 @@ gsap.registerPlugin(ScrollTrigger);
 
       <div class="relative z-10 w-full max-w-full xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end mb-10 sm:mb-14">
-          <div #heroTitleBlock class="lg:col-span-7 min-w-0 opacity-0 gpu-animated">
+          <div
+            #heroTitleBlock
+            class="js-reveal-text lg:col-span-7 min-w-0 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl xl:text-[68px] leading-[1.06] tracking-tight text-onyx-graphite font-normal">
               A poesia da matéria em <span class="italic font-light leading-[1.1] pb-1 inline-block">formas eternas.</span>
             </h1>
           </div>
 
-          <div #heroActionBlock class="lg:col-span-5 flex flex-col items-start lg:items-end justify-end gap-5 min-w-0 opacity-0 gpu-animated">
+          <div
+            #heroActionBlock
+            class="js-reveal-text lg:col-span-5 flex flex-col items-start lg:items-end justify-end gap-5 min-w-0 gpu-animated"
+            [class.opacity-0]="!motionService.prefersReducedMotion()"
+          >
             <p class="text-sm sm:text-base text-mineral-taupe leading-relaxed max-w-[40ch] lg:text-right">
               Peças selecionadas para iluminar a pele com delicadeza e atendimento individualizado para todo o país.
             </p>
@@ -35,7 +44,7 @@ gsap.registerPlugin(ScrollTrigger);
                 rel="noopener noreferrer"
                 appMagneticSpring
                 [magneticStrength]="0.28"
-                class="inline-flex items-center justify-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-3 px-6 py-3.5 rounded-full bg-onyx-graphite text-vanilla-bone text-xs sm:text-[13px] font-medium tracking-[0.04em] hover:bg-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
               >
                 <span class="magnetic-inner inline-flex items-center gap-2.5 whitespace-nowrap">
                   <span>Atendimento Exclusivo</span>
@@ -50,7 +59,7 @@ gsap.registerPlugin(ScrollTrigger);
                 (click)="scrollToCollections($event)"
                 appMagneticSpring
                 [magneticStrength]="0.2"
-                class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full border border-travertine bg-soft-linen text-onyx-graphite text-xs sm:text-[13px] font-medium hover:border-celadon-slate gpu-animated motion-reduce:transition-none motion-reduce:transform-none"
               >
                 <span class="magnetic-inner whitespace-nowrap">Explorar Acervo</span>
               </a>
@@ -60,26 +69,35 @@ gsap.registerPlugin(ScrollTrigger);
 
         <div
           #archContainer
-          class="w-full max-w-5xl xl:max-w-[1400px] 2xl:max-w-[1600px] mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[16/10] xl:aspect-[16/9] 2xl:aspect-[21/10] border border-travertine bg-travertine/40 gpu-animated"
+          class="js-arch-reveal w-full max-w-5xl xl:max-w-[1400px] 2xl:max-w-[1600px] mx-auto rounded-t-[999px] rounded-b-2xl overflow-hidden relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[16/10] xl:aspect-[16/9] 2xl:aspect-[21/10] border border-travertine bg-travertine/40 gpu-animated"
         >
           <video
             #heroVideo
             src="assets/editorial/hero-arch-video.mp4"
             poster="assets/editorial/editorial-macro-frame-2.webp"
-            autoplay
+            [attr.autoplay]="motionService.prefersReducedMotion() ? null : ''"
             muted
-            loop
+            [loop]="!motionService.prefersReducedMotion()"
             playsinline
             preload="metadata"
             disablePictureInPicture
-            class="w-full h-full object-cover gpu-animated"
+            class="js-arch-media w-full h-full object-cover gpu-animated"
           ></video>
+
+          <img
+            *ngIf="motionService.prefersReducedMotion()"
+            src="assets/editorial/editorial-macro-frame-2.webp"
+            alt="Joia selecionada Gotas de Ouro Semijoias"
+            class="js-arch-media absolute inset-0 w-full h-full object-cover pointer-events-none"
+            loading="eager"
+            decoding="async"
+          />
 
           <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx-graphite/60 via-onyx-graphite/15 to-transparent"></div>
 
           <div
             #archOverlayText
-            class="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center text-vanilla-bone gpu-animated"
+            class="js-reveal-text absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14 flex flex-col items-center justify-end text-center text-vanilla-bone gpu-animated"
           >
             <p class="font-editorial italic max-w-md mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-vanilla-bone">
               Delicadeza em cada detalhe. Escolha sua peça com atendimento exclusivo pelo WhatsApp.
@@ -99,17 +117,45 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
   @ViewChild('archOverlayText') archOverlayText!: ElementRef<HTMLElement>;
 
   readonly whatsappUrl = 'https://api.whatsapp.com/message/7HFJMJM3JWS6D1?autoload=1&app_absent=0&utm_source=ig';
+  readonly motionService = inject(MotionPreferenceService);
   private readonly scrollService = inject(ScrollPhysicsService);
   private readonly ngZone = inject(NgZone);
   private mm: gsap.MatchMedia | null = null;
   private observer: IntersectionObserver | null = null;
+  private isVideoVisible = false;
+  private viewInitialized = false;
+
+  constructor() {
+    effect(() => {
+      const reduced = this.motionService.prefersReducedMotion();
+      if (!this.viewInitialized) return;
+      this.syncVideoPlaybackState(reduced);
+    });
+  }
 
   scrollToCollections(event: Event): void {
     event.preventDefault();
     this.scrollService.scrollToSection('#colecoes');
   }
 
+  private syncVideoPlaybackState(reduced: boolean): void {
+    this.ngZone.runOutsideAngular(() => {
+      const videoEl = this.heroVideo?.nativeElement;
+      if (!videoEl) return;
+      if (reduced) {
+        videoEl.pause();
+        videoEl.removeAttribute('autoplay');
+      } else {
+        videoEl.setAttribute('autoplay', '');
+        if (this.isVideoVisible) {
+          videoEl.play().catch(() => {});
+        }
+      }
+    });
+  }
+
   ngAfterViewInit(): void {
+    this.viewInitialized = true;
     this.ngZone.runOutsideAngular(() => {
       const sectionEl = this.heroSection?.nativeElement;
       const titleEl = this.heroTitleBlock?.nativeElement;
@@ -123,11 +169,17 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
       videoEl.muted = true;
       videoEl.disablePictureInPicture = true;
 
+      if (this.motionService.prefersReducedMotion()) {
+        videoEl.pause();
+        videoEl.removeAttribute('autoplay');
+      }
+
       this.observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             const video = entry.target as HTMLVideoElement;
-            if (entry.isIntersecting) {
+            this.isVideoVisible = entry.isIntersecting;
+            if (entry.isIntersecting && !this.motionService.prefersReducedMotion()) {
               video.play().catch(() => {});
             } else {
               video.pause();
@@ -138,92 +190,117 @@ export class HeroEditorialComponent implements AfterViewInit, OnDestroy {
       );
       this.observer.observe(videoEl);
 
-      gsap.fromTo(
-        [titleEl, actionEl],
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: 0.12, force3D: true }
-      );
-
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
       this.mm = gsap.matchMedia();
 
-      this.mm.add('(min-width: 768px)', () => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionEl,
-            start: 'top top',
-            end: 'bottom 50%',
-            scrub: 0.6,
-            invalidateOnRefresh: true
+      this.mm.add(
+        {
+          isDesktop: '(min-width: 768px)',
+          isMobile: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)'
+        },
+        (context) => {
+          const { isDesktop, reduceMotion } = context.conditions as {
+            isDesktop: boolean;
+            isMobile: boolean;
+            reduceMotion: boolean;
+          };
+
+          if (reduceMotion) {
+            const arches = sectionEl.querySelectorAll('.js-arch-reveal');
+            const medias = sectionEl.querySelectorAll('.js-arch-media');
+            const texts = sectionEl.querySelectorAll('.js-reveal-text');
+
+            gsap.set(arches, { clearProps: 'all' });
+            gsap.set(arches, { clipPath: 'none', opacity: 1, scale: 1, y: 0 });
+            gsap.set(medias, { clearProps: 'all' });
+            gsap.set(medias, { scale: 1, yPercent: 0, y: 0 });
+            gsap.set(texts, { clearProps: 'all' });
+            gsap.set(texts, { opacity: 1, scale: 1, y: 0, x: 0 });
+            return;
           }
-        });
 
-        tl.fromTo(
-          arch,
-          {
-            clipPath: 'inset(8% 12% 0% 12% round 999px 999px 16px 16px)',
-            scale: 0.92,
-            force3D: true
-          },
-          {
-            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
-            scale: 1,
-            ease: 'none',
-            force3D: true
-          },
-          0
-        );
+          gsap.fromTo(
+            [titleEl, actionEl],
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: 0.12, force3D: true }
+          );
 
-        tl.fromTo(
-          videoEl,
-          { scale: 1.22, yPercent: -5, force3D: true },
-          { scale: 1, yPercent: 5, ease: 'none', force3D: true },
-          0
-        );
+          if (isDesktop) {
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: sectionEl,
+                start: 'top top',
+                end: 'bottom 50%',
+                scrub: 0.6,
+                invalidateOnRefresh: true
+              }
+            });
 
-        tl.fromTo(
-          overlay,
-          { y: 20, opacity: 0.8, force3D: true },
-          { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
-          0.1
-        );
-      });
+            tl.fromTo(
+              arch,
+              {
+                clipPath: 'inset(8% 12% 0% 12% round 999px 999px 16px 16px)',
+                scale: 0.92,
+                force3D: true
+              },
+              {
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+                scale: 1,
+                ease: 'none',
+                force3D: true
+              },
+              0
+            );
 
-      this.mm.add('(max-width: 767px)', () => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: arch,
-            start: 'top 92%',
-            end: 'top 30%',
-            scrub: 0.5,
-            invalidateOnRefresh: true
+            tl.fromTo(
+              videoEl,
+              { scale: 1.22, yPercent: -5, force3D: true },
+              { scale: 1, yPercent: 5, ease: 'none', force3D: true },
+              0
+            );
+
+            tl.fromTo(
+              overlay,
+              { y: 20, opacity: 0.8, force3D: true },
+              { y: 0, opacity: 1, ease: 'power2.out', force3D: true },
+              0.1
+            );
+          } else {
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: arch,
+                start: 'top 92%',
+                end: 'top 30%',
+                scrub: 0.5,
+                invalidateOnRefresh: true
+              }
+            });
+
+            tl.fromTo(
+              arch,
+              {
+                clipPath: 'inset(4% 4% 0% 4% round 999px 999px 16px 16px)',
+                scale: 0.95,
+                force3D: true
+              },
+              {
+                clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
+                scale: 1,
+                ease: 'none',
+                force3D: true
+              },
+              0
+            );
+
+            tl.fromTo(
+              videoEl,
+              { scale: 1.15, yPercent: -3, force3D: true },
+              { scale: 1, yPercent: 3, ease: 'none', force3D: true },
+              0
+            );
           }
-        });
-
-        tl.fromTo(
-          arch,
-          {
-            clipPath: 'inset(4% 4% 0% 4% round 999px 999px 16px 16px)',
-            scale: 0.95,
-            force3D: true
-          },
-          {
-            clipPath: 'inset(0% 0% 0% 0% round 999px 999px 16px 16px)',
-            scale: 1,
-            ease: 'none',
-            force3D: true
-          },
-          0
-        );
-
-        tl.fromTo(
-          videoEl,
-          { scale: 1.15, yPercent: -3, force3D: true },
-          { scale: 1, yPercent: 3, ease: 'none', force3D: true },
-          0
-        );
-      });
+        }
+      );
     });
   }
 
